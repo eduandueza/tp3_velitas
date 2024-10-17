@@ -1,0 +1,21 @@
+name: flutter_application_1
+description: "A new Flutter project."
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: ^3.5.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_lints: ^4.0.0
+  flutter_riverpod: ^2.5.3
+  flutter_test:
+    sdk: flutter
+  go_router: ^14.3.0
+
+flutter:
+  uses-material-design: true
