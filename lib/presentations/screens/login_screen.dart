@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/widgets/back_button.dart';
 import 'package:flutter_application_1/widgets/logo_widget.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -8,6 +9,7 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: const BackButtonWidget(), 
         title: const Text('Login'),
       ),
       body: Center(

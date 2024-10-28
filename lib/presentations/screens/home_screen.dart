@@ -12,6 +12,7 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Inicio'),
+        //h1: Text('Conocé nuestros productos')
       ),
       body: Padding(
         padding: const EdgeInsets.all(16), 
