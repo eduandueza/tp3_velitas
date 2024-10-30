@@ -3,6 +3,8 @@ import 'package:flutter_application_1/presentations/providers/carrito_provider.d
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class CarritoItemScreen extends ConsumerWidget {
+  const CarritoItemScreen({super.key});
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final cartItems = ref.watch(cartProvider);
@@ -12,7 +14,7 @@ class CarritoItemScreen extends ConsumerWidget {
         title: const Text('Carrito de Compras'),
       ),
       body: cartItems.isEmpty
-          ? Center(child: const Text('El carrito se encuentra vacío'))
+          ? const Center(child: Text('El carrito se encuentra vacío'))
           : ListView.builder(
               itemCount: cartItems.length,
               itemBuilder: (context, index) {

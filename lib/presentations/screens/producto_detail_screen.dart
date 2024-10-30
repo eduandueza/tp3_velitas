@@ -11,7 +11,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class ProductoDetailScreen extends ConsumerWidget { 
   final String productId;
 
-  const ProductoDetailScreen({Key? key, required this.productId}) : super(key: key);
+  const ProductoDetailScreen({super.key, required this.productId});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) { 

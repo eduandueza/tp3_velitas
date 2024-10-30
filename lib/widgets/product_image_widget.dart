@@ -8,13 +8,13 @@ class ProductImageWidget extends StatelessWidget {
   final bool addShadow;
 
   const ProductImageWidget({
-    Key? key,
+    super.key,
     required this.imageUrl,
     this.width = 350,
     this.height = 350,
     this.borderRadius = 15, 
     this.addShadow = true,  
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +25,7 @@ class ProductImageWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(borderRadius),
         boxShadow: addShadow
             ? [
-                BoxShadow(
+                const BoxShadow(
                   color: Colors.black26,
                   blurRadius: 10,
                   offset: Offset(0, 5), // Sombra hacia abajo

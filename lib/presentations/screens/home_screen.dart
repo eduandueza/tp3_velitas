@@ -5,7 +5,7 @@ import 'package:flutter_application_1/widgets/main_menu.dart';
 import 'package:go_router/go_router.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +40,7 @@ class HomeScreen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Image.asset(
-                            '${product.imageUrl}',
+                            product.imageUrl,
                             height: 100,
                             width: double.infinity,
                             fit: BoxFit.cover,
@@ -67,6 +67,12 @@ class HomeScreen extends StatelessWidget {
                 },
               ),
             ),
+                      ElevatedButton(
+            onPressed: () {          
+              context.go('/carrito');
+            },
+            child: const Text('Ir a Carrito'),
+          ),
           ],
         ),
       ),
