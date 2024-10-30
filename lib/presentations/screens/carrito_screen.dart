@@ -1,30 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/presentations/providers/carrito_provider.dart';
 import 'package:flutter_application_1/widgets/back_button.dart';
 import 'package:flutter_application_1/widgets/logo_widget.dart';
 import 'package:flutter_application_1/widgets/main_menu.dart';
+import 'package:flutter_application_1/widgets/quantity_widget.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
-class CarritoScreen extends StatelessWidget {
-  const CarritoScreen({Key? key}) : super(key: key);
+class CarritoScreen extends ConsumerWidget {
+  const CarritoScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    // Lista de productos de ejemplo (puedes reemplazar esto con tus datos reales)
-    final cartItems = [
-      {
-        'name': 'Producto 1',
-        'price': 29.99,
-        'quantity': 1,
-      },
-      {
-        'name': 'Producto 2',
-        'price': 49.99,
-        'quantity': 2,
-      },
-
-    ];
+  Widget build(BuildContext context, WidgetRef ref) {
+    final cartItems = ref.watch(cartProvider);
 
     double total = cartItems.fold(0, (sum, item) {
-      return sum + (item['price'] as double) * (item['quantity'] as int);
+      return sum + (item.price * item.quantity);
     });
 
     return Scaffold(
@@ -42,12 +33,15 @@ class CarritoScreen extends StatelessWidget {
               itemBuilder: (context, index) {
                 final item = cartItems[index];
                 return ListTile(
-                  title: Text(item['name'] as String), // Asegúrate de convertir a String
-                  subtitle: Text('Precio: \$${(item['price'] as double).toStringAsFixed(2)} x ${item['quantity'] as int}'), // Asegúrate de convertir a String
-                  trailing: IconButton(
-                    icon: const Icon(Icons.remove_circle),
-                    onPressed: () {
-                      // Lógica para eliminar el producto del carrito
+                  title: Text(item.name),
+                  subtitle: Text('Precio: \$${item.price.toStringAsFixed(2)}'),
+                  trailing: QuantityWidget(
+                    cantidad: item.quantity,
+                    aumentarCantidad: () {
+                      ref.read(cartProvider.notifier).increaseQuantity(item.name);
+                    },
+                    disminuirCantidad: () {
+                      ref.read(cartProvider.notifier).decreaseQuantity(item.name);
                     },
                   ),
                 );
@@ -55,7 +49,7 @@ class CarritoScreen extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(16),
             child: Text(
               'Total: \$${total.toStringAsFixed(2)}',
               style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -63,13 +57,58 @@ class CarritoScreen extends StatelessWidget {
           ),
           ElevatedButton(
             onPressed: () {
-              // Lógica para proceder a la compra
+              // verifica si el carrito está vacío
+              if (cartItems.isEmpty) {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: const Text('Carrito vacío'),
+                      content: const Text('No compraste nada che.'),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop(); 
+                          },
+                          child: const Text('OK'),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              } else {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: const Text('Confirmación de compra'),
+                      content: const Text('¿Estás seguro de que deseas realizar esta compra?'),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop(); 
+                          },
+                          child: const Text('No'),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            ref.read(cartProvider.notifier).clearCart(); 
+                            Navigator.of(context).pop(); 
+                            context.go('/aprobada');
+                          },
+                          child: const Text('Sí'),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              }
             },
-            child: const Text('Proceder a la Compra'),
+            child: const Text('Comprar'),
           ),
         ],
       ),
-      bottomNavigationBar: MainMenu(),
+      bottomNavigationBar: const MainMenu(),
     );
   }
 }

@@ -4,7 +4,7 @@ import 'package:flutter_application_1/widgets/main_menu.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class PerfilScreen extends ConsumerWidget {
-  const PerfilScreen({Key? key}) : super(key: key);
+  const PerfilScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
