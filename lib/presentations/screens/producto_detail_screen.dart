@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/core/router/items/modelo_carrito.dart';
 import 'package:flutter_application_1/core/router/menu/menu_productos.dart';
+import 'package:flutter_application_1/presentations/providers/carrito_provider.dart';
 import 'package:flutter_application_1/widgets/back_button.dart';
 import 'package:flutter_application_1/widgets/logo_widget.dart';
 import 'package:flutter_application_1/widgets/main_menu.dart';
 import 'package:flutter_application_1/widgets/product_image_widget.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart'; 
 
-class ProductoDetailScreen extends StatelessWidget {
+class ProductoDetailScreen extends ConsumerWidget { 
   final String productId;
 
   const ProductoDetailScreen({Key? key, required this.productId}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) { 
     final product = products.firstWhere((product) => product.id == productId);
 
     return Scaffold(
@@ -19,34 +22,29 @@ class ProductoDetailScreen extends StatelessWidget {
         leading: const BackButtonWidget(),
         title: Text(product.name),
       ),
-      body: SingleChildScrollView( 
+      body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-               LogoWidget(),
+              LogoWidget(),
               const SizedBox(height: 20),
-              
               Center(
-                child: ProductImageWidget(
-                  imageUrl: product.imageUrl),
+                child: ProductImageWidget(imageUrl: product.imageUrl),
               ),
               const SizedBox(height: 20),
               _buildProductInfo(context, product),
               const SizedBox(height: 20),
-
-              // Botón de agregar al carrito
-              _buildAddToCartButton(context),
+              _buildAddToCartButton(context, product, ref), 
             ],
           ),
         ),
       ),
-      bottomNavigationBar:  MainMenu(),
+      bottomNavigationBar: MainMenu(),
     );
   }
 
-  // info del producto
   Widget _buildProductInfo(BuildContext context, Product product) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -79,18 +77,22 @@ class ProductoDetailScreen extends StatelessWidget {
           product.description,
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 color: Colors.black87,
-                height: 1.5,
+                height: 1,
               ),
         ),
       ],
     );
   }
 
-  // boton de agregar al carrito
-  Widget _buildAddToCartButton(BuildContext context) {
+  Widget _buildAddToCartButton(BuildContext context, Product product, WidgetRef ref) {
     return Center(
       child: ElevatedButton.icon(
         onPressed: () {
+          final cartNotifier = ref.read(cartProvider.notifier); 
+          cartNotifier.addItem(CartItem(name: product.name, price: product.price));
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('${product.name} agregado al carrito!')),
+          );
         },
         icon: const Icon(Icons.shopping_cart),
         label: const Text('Agregar al carrito'),
@@ -100,5 +102,4 @@ class ProductoDetailScreen extends StatelessWidget {
         ),
       ),
     );
-  }
-}
+  }}
