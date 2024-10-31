@@ -82,29 +82,52 @@ class DireccionesScreen extends ConsumerWidget {
   );
 }
 
-  void _agregarDireccion(BuildContext context, WidgetRef ref) {
+void _agregarDireccion(BuildContext context, WidgetRef ref) {
   showDialog(
     context: context,
     builder: (context) {
-      TextEditingController controller = TextEditingController();
+      
+      TextEditingController calleController = TextEditingController();
+      TextEditingController alturaController = TextEditingController();
+      TextEditingController provinciaController = TextEditingController();
+      TextEditingController paisController = TextEditingController();
+      
       return AlertDialog(
         title: const Text('Agregar Dirección'),
-        content: TextField(
-          controller: controller,
-          decoration: const InputDecoration(labelText: 'Nueva Dirección'),
+        content: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TextField(
+                controller: calleController,
+                decoration: const InputDecoration(labelText: 'Calle'),
+              ),
+              TextField(
+                controller: alturaController,
+                decoration: const InputDecoration(labelText: 'Altura'),
+              ),
+              TextField(
+                controller: provinciaController,
+                decoration: const InputDecoration(labelText: 'Provincia'),
+              ),
+              TextField(
+                controller: paisController,
+                decoration: const InputDecoration(labelText: 'Pais'),
+              ),
+            ],
+          ),
         ),
         actions: [
           TextButton(
             onPressed: () {
-              final nuevaDireccion = controller.text;
-              if (nuevaDireccion.isNotEmpty) {
-                
-                ref.read(userProvider.notifier).addAddress(nuevaDireccion);
-                context.pop(); 
+              
+              final direccionCompleta = '${calleController.text}, ${alturaController.text}, ${provinciaController.text}, ${paisController.text}';
+              if (calleController.text.isNotEmpty && alturaController.text.isNotEmpty && provinciaController.text.isNotEmpty && paisController.text.isNotEmpty) {
+                ref.read(userProvider.notifier).addAddress(direccionCompleta);
+                Navigator.of(context).pop();
               } else {
-                
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Por favor, ingresa una dirección.')),
+                  const SnackBar(content: Text('Por favor, completa todos los campos.')),
                 );
               }
             },
@@ -120,4 +143,8 @@ class DireccionesScreen extends ConsumerWidget {
       );
     },
   );
-}}
+}
+
+
+
+  }

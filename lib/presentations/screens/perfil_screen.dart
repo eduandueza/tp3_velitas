@@ -53,6 +53,12 @@ class PerfilScreen extends ConsumerWidget {
                   subtitle: "Ver productos que has marcado como favoritos",
                   onTap: () {},
                 ),
+                ProfileOption(
+                  icon: Icons.logout,
+                  title: "Cerrar sesion",
+                  subtitle: "",
+                  onTap: () {}, // para cuando se haga el login , esto deberia cerrar la sesion y redirigir a /login TODO
+                )
               ],
             ),
           ),

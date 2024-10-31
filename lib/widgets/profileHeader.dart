@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+// TODO 
+
 class ProfileHeader extends StatelessWidget {
   final String username;
   final String email;
@@ -13,7 +15,7 @@ class ProfileHeader extends StatelessWidget {
       children: [
         CircleAvatar(
           radius: 50, 
-          backgroundImage: NetworkImage('https://example.com/path/to/profile/image.jpg'), 
+          backgroundImage: NetworkImage('https://i.ytimg.com/vi/4asGM9wABfU/hq720.jpg?sqp=-oaymwE7CK4FEIIDSFryq4qpAy0IARUAAAAAGAElAADIQj0AgKJD8AEB-AH-CYAC0AWKAgwIABABGGUgWShaMA8=&rs=AOn4CLBVDR-6TuXImREtI1LRd8l-1a3ufg'), 
         ),
         const SizedBox(height: 8), 
         Text(
