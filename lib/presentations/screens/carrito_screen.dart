@@ -7,8 +7,11 @@ import 'package:flutter_application_1/widgets/quantity_widget.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../OrderStateEnum.dart';
 import '../../core/router/items/model_cart.dart';
+import '../../core/router/items/model_order.dart';
 import '../providers/cart_provider.dart';
+import '../providers/order_provider.dart';
 
 class CarritoScreen extends ConsumerWidget {
   const CarritoScreen({super.key});
@@ -103,8 +106,11 @@ class CarritoScreen extends ConsumerWidget {
                               items: List.from(cartItems), 
                               total: total,
                             );
-
                             
+                           
+                            
+                             ref.read(orderProvider.notifier).addOrder(newCart);
+
                             ref.read(carritosProvider.notifier).addCart(newCart);
 
                             ref.read(carritoProvider.notifier).clearCart(); 

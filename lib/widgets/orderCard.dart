@@ -1,18 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/OrderStateEnum.dart';
 import 'package:flutter_application_1/widgets/cartDetails.dart';
 
 import '../core/router/items/model_cart.dart';
+import '../core/router/items/model_order.dart';
 
-class CartCard extends StatelessWidget {
-  final Cart cart;
+class OrderCard  extends StatelessWidget {
+  final Order order ;
 
-  const CartCard({
+  const OrderCard ({
     Key? key,
-    required this.cart,
+    required this.order,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+
+    final cart = order.cart;
+
     return Card(
       elevation: 4,
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -43,6 +48,13 @@ class CartCard extends StatelessWidget {
                     color: Colors.green,
                     fontWeight: FontWeight.bold,
                   ),
+            ), const SizedBox(height: 8),
+            Text(
+              "Estado: ${order.estado.name}",
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                 color: order.color,
+                 fontWeight: FontWeight.bold,
+               ),
             ),
             const SizedBox(height: 12),
             Align(

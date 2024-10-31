@@ -1,10 +1,12 @@
 
-import 'dart:math';
+
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/router/items/model_cart.dart';
-import '../../core/router/items/modelo_carrito.dart';
+
+
+// HAY QUE VOLAR ESTO DPS, le pifie. era Order y no Cart. me acorde dps del estado del pedido. NESTO VIVE AMIGA , Milei Tambien 
 
 class CartNotifier extends StateNotifier<List<Cart>> {
   CartNotifier() : super([]);
