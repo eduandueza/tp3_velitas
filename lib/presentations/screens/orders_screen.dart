@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../widgets/orderCard.dart';
-import '../providers/cart_provider.dart';
 import '../providers/order_provider.dart';
 
 class OrdersScreen extends ConsumerWidget {

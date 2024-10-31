@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/widgets/shippingInformationButton.dart';
 
 import '../core/router/items/model_cart.dart';
+import '../presentations/screens/ShippingDetailsScreen.dart';
 
 class CartDetails extends StatelessWidget {
   final Cart cart;
@@ -48,7 +50,17 @@ class CartDetails extends StatelessWidget {
                   );
                 },
               ),
-            ),
+            ),const SizedBox(height: 16), 
+              ShippingInformationButton(
+               onPressed: () {
+               
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => ShippingDetailsScreen(cart: cart), 
+                  ),
+                );
+              },
+            ), 
           ],
         ),
       ),

@@ -7,9 +7,7 @@ import 'package:flutter_application_1/widgets/quantity_widget.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../OrderStateEnum.dart';
 import '../../core/router/items/model_cart.dart';
-import '../../core/router/items/model_order.dart';
 import '../providers/cart_provider.dart';
 import '../providers/order_provider.dart';
 
