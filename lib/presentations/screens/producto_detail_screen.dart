@@ -90,6 +90,9 @@ class ProductoDetailScreen extends ConsumerWidget {
         onPressed: () {
           final cartNotifier = ref.read(carritoProvider.notifier); 
           cartNotifier.addItem(CartItem(name: product.name, price: product.price));
+          
+          ScaffoldMessenger.of(context).hideCurrentSnackBar(); // COMO SE HACIA ESTO para esconder la alerta, esto soluciona a medias
+
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('${product.name} agregado al carrito!')),
           );
