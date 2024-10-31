@@ -88,7 +88,7 @@ class ProductoDetailScreen extends ConsumerWidget {
     return Center(
       child: ElevatedButton.icon(
         onPressed: () {
-          final cartNotifier = ref.read(cartProvider.notifier); 
+          final cartNotifier = ref.read(carritoProvider.notifier); 
           cartNotifier.addItem(CartItem(name: product.name, price: product.price));
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('${product.name} agregado al carrito!')),

@@ -7,12 +7,16 @@ import 'package:flutter_application_1/widgets/quantity_widget.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../core/router/items/model_cart.dart';
+import '../providers/cart_provider.dart';
+
 class CarritoScreen extends ConsumerWidget {
   const CarritoScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final cartItems = ref.watch(cartProvider);
+    final cartItems = ref.watch(carritoProvider);
+    //final cartProvider= ref.watch(carritosProvider);
 
     double total = cartItems.fold(0, (sum, item) {
       return sum + (item.price * item.quantity);
@@ -38,10 +42,10 @@ class CarritoScreen extends ConsumerWidget {
                   trailing: QuantityWidget(
                     cantidad: item.quantity,
                     aumentarCantidad: () {
-                      ref.read(cartProvider.notifier).increaseQuantity(item.name);
+                      ref.read(carritoProvider.notifier).increaseQuantity(item.name);
                     },
                     disminuirCantidad: () {
-                      ref.read(cartProvider.notifier).decreaseQuantity(item.name);
+                      ref.read(carritoProvider.notifier).decreaseQuantity(item.name);
                     },
                   ),
                 );
@@ -92,8 +96,23 @@ class CarritoScreen extends ConsumerWidget {
                         ),
                         TextButton(
                           onPressed: () {
-                            ref.read(cartProvider.notifier).clearCart(); 
-                            Navigator.of(context).pop(); 
+                             //agregando carrito
+                            final newCart = Cart(
+                              id: DateTime.now().millisecondsSinceEpoch.toString(), 
+                              fechaCompra: DateTime.now(),
+                              items: List.from(cartItems), 
+                              total: total,
+                            );
+
+                            
+                            ref.read(carritosProvider.notifier).addCart(newCart);
+
+                            ref.read(carritoProvider.notifier).clearCart(); 
+                            
+                            Navigator.of(context).pop();
+
+
+
                             context.go('/aprobada');
                           },
                           child: const Text('Sí'),

@@ -7,7 +7,7 @@ class CarritoItemScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final cartItems = ref.watch(cartProvider);
+    final cartItems = ref.watch(carritoProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -25,7 +25,7 @@ class CarritoItemScreen extends ConsumerWidget {
                   trailing: IconButton(
                     icon: const Icon(Icons.remove_circle),
                     onPressed: () {
-                      ref.read(cartProvider.notifier).removeItem(item.name);
+                      ref.read(carritoProvider.notifier).removeItem(item.name);
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text('${item.name} eliminado del carrito')),
                       );
@@ -38,7 +38,7 @@ class CarritoItemScreen extends ConsumerWidget {
         child: Padding(
           padding: const EdgeInsets.all(8),
           child: Text(
-            'Total: \$${ref.watch(cartProvider.notifier).total.toStringAsFixed(2)}',
+            'Total: \$${ref.watch(carritoProvider.notifier).total.toStringAsFixed(2)}',
             style: Theme.of(context).textTheme.titleLarge,
           ),
         ),

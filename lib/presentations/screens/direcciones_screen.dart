@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../widgets/deleteAddressButton.dart';
 import '../providers/user_provider.dart';
 
  
@@ -32,13 +33,7 @@ class DireccionesScreen extends ConsumerWidget {
                     _editarDireccion(context, ref, addresses[index]);
                   },
                 ),
-                IconButton(
-                  icon: const Icon(Icons.delete),
-                  onPressed: () {
-                   
-                    ref.read(userProvider.notifier).removeAddress(addresses[index]);
-                  },
-                ),
+               DeleteAddressButton(address: addresses[index], ref: ref), 
               ],
             ),
           );

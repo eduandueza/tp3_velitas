@@ -13,7 +13,7 @@ class ProfileHeader extends StatelessWidget {
       children: [
         CircleAvatar(
           radius: 50, 
-          backgroundImage: NetworkImage('https://example.com/path/to/profile/image.jpg'), // Cambia la URL de la imagen
+          backgroundImage: NetworkImage('https://example.com/path/to/profile/image.jpg'), 
         ),
         const SizedBox(height: 8), 
         Text(
@@ -23,12 +23,12 @@ class ProfileHeader extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        const SizedBox(height: 4), // Espacio entre el nombre y el email
+        const SizedBox(height: 4), 
         Text(
           email,
           style: const TextStyle(
             fontSize: 16,
-            color: Colors.grey, // O el color que desees
+            color: Colors.grey, 
           ),
         ),
       ],

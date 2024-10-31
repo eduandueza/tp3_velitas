@@ -45,7 +45,7 @@ class PerfilScreen extends ConsumerWidget {
                   icon: Icons.shopping_cart,
                   title: "Mis Pedidos",
                   subtitle: "Ver historial de pedidos recientes",
-                  onTap: () {},
+                  onTap: () => context.push('/perfil/pedidos'),
                 ),
                 ProfileOption(
                   icon: Icons.favorite,

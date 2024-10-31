@@ -10,7 +10,7 @@ class MainMenu extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentIndex = ref.watch(menuProvider).selectedIndex;
-    final totalItems = ref.watch(cartProvider).fold(0, (sum, item) => sum + item.quantity);
+    final totalItems = ref.watch(carritoProvider).fold(0, (sum, item) => sum + item.quantity);
 
     return NavigationBar(
       onDestinationSelected: (int index) {

@@ -1,5 +1,6 @@
 import 'package:flutter_application_1/presentations/screens/approved_screen.dart';
 import 'package:flutter_application_1/presentations/screens/carrito_screen.dart';
+import 'package:flutter_application_1/presentations/screens/carts_screen.dart';
 import 'package:flutter_application_1/presentations/screens/disapproved_screen.dart';
 import 'package:flutter_application_1/presentations/screens/home_screen.dart';
 import 'package:flutter_application_1/presentations/screens/login_screen.dart';
@@ -38,6 +39,10 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/perfil/direcciones',
       builder: (context, state) => const DireccionesScreen(),
+      ),
+    GoRoute(
+      path: '/perfil/pedidos',
+      builder: (context, state) => const CartsScreen(),
       ),
     GoRoute(
       path: '/aprobada',
