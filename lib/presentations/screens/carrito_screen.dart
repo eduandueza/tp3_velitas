@@ -30,7 +30,7 @@ class CarritoScreen extends ConsumerWidget {
       ),
       body: Column(
         children: [
-          LogoWidget(),
+          const LogoWidget(),
           const SizedBox(height: 20),
           Expanded(
             child: ListView.builder(

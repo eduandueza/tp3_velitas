@@ -6,14 +6,14 @@ class ProfileHeader extends StatelessWidget {
   final String username;
   final String email;
 
-  const ProfileHeader({Key? key, required this.username, required this.email}) : super(key: key);
+  const ProfileHeader({super.key, required this.username, required this.email});
 
   @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center, 
       children: [
-        CircleAvatar(
+        const CircleAvatar(
           radius: 50, 
           backgroundImage: NetworkImage('https://i.ytimg.com/vi/4asGM9wABfU/hq720.jpg?sqp=-oaymwE7CK4FEIIDSFryq4qpAy0IARUAAAAAGAElAADIQj0AgKJD8AEB-AH-CYAC0AWKAgwIABABGGUgWShaMA8=&rs=AOn4CLBVDR-6TuXImREtI1LRd8l-1a3ufg'), 
         ),

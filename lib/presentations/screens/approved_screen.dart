@@ -11,25 +11,25 @@ class ApprovedScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Compra Aprobada'),
       ),
-      body: Column(
+      body: const Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const LogoWidget(), // Aquí puedes usar tu logo si lo deseas
-          const SizedBox(height: 20),
+          LogoWidget(), // Aquí puedes usar tu logo si lo deseas
+          SizedBox(height: 20),
           Icon(
             Icons.check_circle, // Icono de verificación
             color: Colors.green,
             size: 80,
           ),
-          const SizedBox(height: 20),
-          const Text(
+          SizedBox(height: 20),
+          Text(
             '¡Gracias por tu compra!',
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             textAlign: TextAlign.center,
           ),
-          const SizedBox(height: 10),
-          const Text(
+          SizedBox(height: 10),
+          Text(
             'Tu pedido ha sido procesado con éxito.',
             style: TextStyle(fontSize: 16),
             textAlign: TextAlign.center,

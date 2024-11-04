@@ -18,7 +18,7 @@ class HomeScreen extends StatelessWidget {
         padding: const EdgeInsets.all(16), 
         child: Column(
           children: [
-            LogoWidget(),
+            const LogoWidget(),
             Expanded(
               child: GridView.builder(
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -69,14 +69,14 @@ class HomeScreen extends StatelessWidget {
             ),
                       ElevatedButton(
             onPressed: () {          
-              context.go('/carrito');
+              context.go('/login');
             },
             child: const Text('Ir a Carrito'),
           ),
           ],
         ),
       ),
-      bottomNavigationBar: MainMenu(),
+      bottomNavigationBar: const MainMenu(),
 );
 }
 }

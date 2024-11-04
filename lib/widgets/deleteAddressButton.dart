@@ -9,10 +9,10 @@ class DeleteAddressButton extends StatelessWidget {
   final WidgetRef ref;
 
   const DeleteAddressButton({
-    Key? key,
+    super.key,
     required this.address,
     required this.ref,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
