@@ -6,7 +6,6 @@ class CartNotifier extends StateNotifier<List<CartItem>> {
 
 // Dentro de la clase CartNotifier en carrito_provider.dart
 
-
   void addItem(CartItem item) {
     final existingItem = state.firstWhere(
       (cartItem) => cartItem.name == item.name,

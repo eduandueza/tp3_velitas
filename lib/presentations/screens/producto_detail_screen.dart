@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/core/router/items/modelo_carrito.dart';
-import 'package:flutter_application_1/core/router/menu/menu_productos.dart';
+
+import 'package:flutter_application_1/domain/candle.dart';
+import 'package:flutter_application_1/presentations/providers/candle_provider.dart';
 import 'package:flutter_application_1/presentations/providers/carrito_provider.dart';
 import 'package:flutter_application_1/widgets/back_button.dart';
 import 'package:flutter_application_1/widgets/logo_widget.dart';
@@ -15,7 +17,10 @@ class ProductoDetailScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) { 
-    final product = products.firstWhere((product) => product.id == productId);
+    //final product = products.firstWhere((product) => product.id == productId);
+
+    final product = candleProvider.getCandleById(productId);
+
 
     return Scaffold(
       appBar: AppBar(
@@ -45,7 +50,7 @@ class ProductoDetailScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildProductInfo(BuildContext context, Product product) {
+  Widget _buildProductInfo(BuildContext context, Candle product) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -84,7 +89,7 @@ class ProductoDetailScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildAddToCartButton(BuildContext context, Product product, WidgetRef ref) {
+  Widget _buildAddToCartButton(BuildContext context, Candle product, WidgetRef ref) {
     return Center(
       child: ElevatedButton.icon(
         onPressed: () {
@@ -106,3 +111,7 @@ class ProductoDetailScreen extends ConsumerWidget {
       ),
     );
   }}
+
+extension on StateNotifierProvider<CandleProvider, List<Candle>> {
+  getCandleById(String productId) {}
+}
