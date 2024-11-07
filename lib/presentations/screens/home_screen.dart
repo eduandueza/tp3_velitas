@@ -75,9 +75,9 @@ class HomeScreen extends ConsumerWidget {
             ),
             ElevatedButton(
               onPressed: () {
-                context.go('/carrito');
+                context.go('/login');
               },
-              child: const Text('Ir a Carrito'),
+              child: const Text('Ir a Login'),
             ),
           ],
         ),
