@@ -6,12 +6,12 @@ class CustomTextField extends StatelessWidget {
   final bool isPassword;
   final TextEditingController? controller;
 
-  const CustomTextField({
+  CustomTextField({
     super.key,
     required this.labelText,
     required this.icon,
     this.isPassword = false,
-    this.controller, 
+    this.controller,
   });
 
   @override
@@ -19,6 +19,8 @@ class CustomTextField extends StatelessWidget {
     return TextField(
       controller: controller,
       obscureText: isPassword,
+      enableInteractiveSelection: false, // Desactiva el menú contextual
+      showCursor: false, // Desactiva el cursor
       decoration: InputDecoration(
         labelText: labelText,
         prefixIcon: Icon(icon),

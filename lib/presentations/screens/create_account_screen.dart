@@ -26,23 +26,28 @@ class CreateAccountScreen extends StatelessWidget {
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 20),
-            const Row(
+            Row(
               children: [
                 Expanded(child: CustomTextField(labelText: "Nombre", icon: Icons.person_outline)),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 Expanded(child: CustomTextField(labelText: "Apellido", icon: Icons.person_outline)),
               ],
             ),
             const SizedBox(height: 16),
-            const CustomTextField(labelText: "Usuario", icon: Icons.person),
+            CustomTextField(labelText: "Usuario", icon: Icons.person),
             const SizedBox(height: 16),
-            const CustomTextField(labelText: "Correo", icon: Icons.email_outlined),
+            CustomTextField(labelText: "Correo", icon: Icons.email_outlined),
             const SizedBox(height: 16),
-            const CustomTextField(labelText: "Contraseña", icon: Icons.lock_outline, isPassword: true),
+            CustomTextField(labelText: "Contraseña", icon: Icons.lock_outline, isPassword: true),
             const SizedBox(height: 20),
             CustomButton(
-              text: "Crear cuebta",
-              onPressed: () {},
+              text: "Crear cuenta",
+              onPressed: () {
+                // Cerrar el teclado al presionar el botón
+                FocusScope.of(context).unfocus();
+
+                // Aquí puedes agregar la lógica para crear la cuenta
+              },
             ),
           ],
         ),
