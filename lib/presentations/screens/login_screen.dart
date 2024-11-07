@@ -44,6 +44,9 @@ class LoginScreen extends ConsumerWidget {
             CustomButton(
               text: "Acceder",
               onPressed: () {
+                // Cerrar el teclado al presionar el botón
+                FocusScope.of(context).unfocus();
+
                 String email = emailController.text;
                 String password = passwordController.text;
 

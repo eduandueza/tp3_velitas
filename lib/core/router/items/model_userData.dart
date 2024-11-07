@@ -4,6 +4,7 @@ class UserData {
   final String email;
   final String photoUrl;
   final List<String> addresses;
+  final String rol;
 
   UserData({
     required this.id,
@@ -11,6 +12,7 @@ class UserData {
     required this.email,
     required this.photoUrl,
     this.addresses = const [],
+    required this.rol
   });
 
   
@@ -27,6 +29,7 @@ class UserData {
       email: email ?? this.email,
       photoUrl: photoUrl ?? this.photoUrl,
       addresses: addresses ?? this.addresses,
+      rol: rol ?? this.rol
     );
   }
 }
