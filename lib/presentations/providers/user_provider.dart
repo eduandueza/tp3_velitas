@@ -11,6 +11,7 @@ class UserNotifier extends StateNotifier<UserData> {
       "Calle Falsa 123, Ciudad, País",
       "Avenida Siempre Viva 742, Ciudad, País",
     ],
+    rol:"ADMIN",
   ));
 
   void addAddress(String address) {

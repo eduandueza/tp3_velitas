@@ -1,3 +1,5 @@
+import 'package:flutter_application_1/presentations/screens/admin_orders_screen.dart';
+import 'package:flutter_application_1/presentations/screens/admin_products_screen.dart';
 import 'package:flutter_application_1/presentations/screens/approved_screen.dart';
 import 'package:flutter_application_1/presentations/screens/carrito_screen.dart';
 import 'package:flutter_application_1/presentations/screens/create_account_screen.dart';
@@ -7,6 +9,7 @@ import 'package:flutter_application_1/presentations/screens/login_screen.dart';
 import 'package:flutter_application_1/presentations/screens/orders_screen.dart';
 import 'package:flutter_application_1/presentations/screens/perfil_screen.dart';
 import 'package:flutter_application_1/presentations/screens/producto_detail_screen.dart';
+import 'package:flutter_application_1/presentations/screens/profile_screen_selector.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../presentations/screens/direcciones_screen.dart';
@@ -35,7 +38,7 @@ final GoRouter appRouter = GoRouter(
     ),
     GoRoute(
       path: '/perfil',
-      builder: (context, state) => const PerfilScreen(),
+      builder: (context, state) => const ProfileScreenSelector(),
     ),
     GoRoute(
       path: '/perfil/direcciones',
@@ -46,6 +49,14 @@ final GoRouter appRouter = GoRouter(
       builder: (context, state) => const OrdersScreen(),
       ),
     GoRoute(
+      path: '/admin/orders',
+      builder: (context, state) => const OrdersScreenAdmin(),
+      ),
+    GoRoute(
+      path: '/admin/products',
+      builder: (context, state) => const AdminProductsScreen(),
+      ),   
+    GoRoute(
       path: '/aprobada',
       builder: (context, state) => const ApprovedScreen(),
     ),
@@ -53,7 +64,7 @@ final GoRouter appRouter = GoRouter(
       path: '/rechazada',
       builder: (context, state) => const DisapprovedScreen(),
     ),
-        GoRoute(
+    GoRoute(
       path: '/crear',
       builder: (context, state) => const CreateAccountScreen(),
     ),
