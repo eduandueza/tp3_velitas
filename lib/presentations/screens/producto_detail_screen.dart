@@ -28,7 +28,7 @@ class ProductoDetailScreen extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              LogoWidget(),
+              const LogoWidget(),
               const SizedBox(height: 20),
               Center(
                 child: ProductImageWidget(imageUrl: product.imageUrl),
@@ -41,7 +41,7 @@ class ProductoDetailScreen extends ConsumerWidget {
           ),
         ),
       ),
-      bottomNavigationBar: MainMenu(),
+      bottomNavigationBar: const MainMenu(),
     );
   }
 

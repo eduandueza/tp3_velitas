@@ -7,7 +7,7 @@ import 'package:go_router/go_router.dart';
 class CategoryProductsScreen extends ConsumerWidget {
   final String candleTypeId;
 
-  const CategoryProductsScreen({Key? key, required this.candleTypeId}) : super(key: key);
+  const CategoryProductsScreen({super.key, required this.candleTypeId});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

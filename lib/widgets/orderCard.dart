@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/OrderStateEnum.dart';
 import 'package:flutter_application_1/widgets/cartDetails.dart';
+
 import '../core/router/items/model_order.dart';
 
 class OrderCard  extends StatelessWidget {
   final Order order ;
 
   const OrderCard ({
-    Key? key,
+    super.key,
     required this.order,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

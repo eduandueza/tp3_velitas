@@ -1,9 +1,10 @@
 import 'package:flutter_application_1/presentations/screens/approved_screen.dart';
 import 'package:flutter_application_1/presentations/screens/carrito_screen.dart';
-import 'package:flutter_application_1/presentations/screens/orders_screen.dart';
+import 'package:flutter_application_1/presentations/screens/create_account_screen.dart';
 import 'package:flutter_application_1/presentations/screens/disapproved_screen.dart';
 import 'package:flutter_application_1/presentations/screens/home_screen.dart';
 import 'package:flutter_application_1/presentations/screens/login_screen.dart';
+import 'package:flutter_application_1/presentations/screens/orders_screen.dart';
 import 'package:flutter_application_1/presentations/screens/perfil_screen.dart';
 import 'package:flutter_application_1/presentations/screens/producto_detail_screen.dart';
 import 'package:go_router/go_router.dart';
@@ -52,5 +53,10 @@ final GoRouter appRouter = GoRouter(
       path: '/rechazada',
       builder: (context, state) => const DisapprovedScreen(),
     ),
+        GoRoute(
+      path: '/crear',
+      builder: (context, state) => const CreateAccountScreen(),
+    ),
+
   ],
 );

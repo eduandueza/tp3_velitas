@@ -6,11 +6,11 @@ class QuantityWidget extends StatelessWidget {
   final VoidCallback disminuirCantidad;
 
   const QuantityWidget({
-    Key? key,
+    super.key,
     required this.cantidad,
     required this.aumentarCantidad,
     required this.disminuirCantidad,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

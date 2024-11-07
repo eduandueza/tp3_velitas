@@ -3,14 +3,13 @@ import 'package:flutter_application_1/widgets/main_menu.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-
 import '../../widgets/SectionTitle.dart';
 import '../../widgets/profileHeader.dart';
 import '../../widgets/profileOptions.dart';
 import '../providers/user_provider.dart';
 
 class PerfilScreen extends ConsumerWidget {
-  const PerfilScreen({Key? key}) : super(key: key);
+  const PerfilScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

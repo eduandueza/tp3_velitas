@@ -5,7 +5,7 @@ import '../../core/router/items/model_cart.dart';
 class ShippingDetailsScreen extends StatelessWidget {
   final Cart cart;
 
-  const ShippingDetailsScreen({Key? key, required this.cart}) : super(key: key);
+  const ShippingDetailsScreen({super.key, required this.cart});
 
   @override
   Widget build(BuildContext context) {
@@ -13,8 +13,8 @@ class ShippingDetailsScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text("Datos de Envio"),
       ),
-      body: Center(
-        child: const Text("Aca van los datitos del enevio"), 
+      body: const Center(
+        child: Text("Aca van los datitos del enevio"), 
       ),
     );
   }

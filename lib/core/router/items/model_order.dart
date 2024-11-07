@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/core/router/items/model_cart.dart';
+
 import '../../../OrderStateEnum.dart';
 
 
@@ -28,7 +29,7 @@ class Order {
   
   Order copyWith({OrderState? estado}) {
     return Order(
-      cart: this.cart,
+      cart: cart,
       estado: estado ?? this.estado,
     );
   }}

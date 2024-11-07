@@ -6,6 +6,6 @@ final candleTypeProvider = FutureProvider<List<CandleType>>((ref) async {
   final db = FirebaseFirestore.instance;
   final querySnapshot = await db.collection('candleTypes').get();
   return querySnapshot.docs
-      .map((doc) => CandleType.fromFirestore(doc.data() as Map<String, dynamic>, doc.id))
+      .map((doc) => CandleType.fromFirestore(doc.data(), doc.id))
       .toList();
 });

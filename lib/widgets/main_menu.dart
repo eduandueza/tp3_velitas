@@ -42,8 +42,8 @@ class MainMenu extends ConsumerWidget {
                   top: 2.5,
                   child: Container(
                     padding: const EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 212, 84, 195),
+                    decoration: const BoxDecoration(
+                      color: Color.fromARGB(255, 212, 84, 195),
                       shape: BoxShape.circle,
                     ),
                     child: Text(

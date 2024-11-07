@@ -7,7 +7,7 @@ import '../presentations/screens/ShippingDetailsScreen.dart';
 class CartDetails extends StatelessWidget {
   final Cart cart;
 
-  const CartDetails({Key? key, required this.cart}) : super(key: key);
+  const CartDetails({super.key, required this.cart});
 
   @override
   Widget build(BuildContext context) {
@@ -22,15 +22,15 @@ class CartDetails extends StatelessWidget {
           children: [
             Text(
               "Fecha de Compra: ${cart.fechaCompra.toLocal()}",
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 8),
             Text(
               "Total: \$${cart.total.toStringAsFixed(4)}",
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
             ),
             const Divider(height: 32),
-            Text(
+            const Text(
               "Productos:",
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),

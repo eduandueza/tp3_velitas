@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class ShippingInformationButton extends StatelessWidget {
   final VoidCallback onPressed;
 
-  const ShippingInformationButton({Key? key, required this.onPressed}) : super(key: key);
+  const ShippingInformationButton({super.key, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
