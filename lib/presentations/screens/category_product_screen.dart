@@ -12,7 +12,7 @@ class CategoryProductsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // Obtiene las velas filtradas por tipo de vela (candleTypeId)
-    final products = ref.watch(candleProvider).where((candle) => candle.candleTypeId == candleTypeId).toList();
+    final products = ref.watch(candleProvider).where((candle) => candle.typeRef == candleTypeId).toList();
 
     return Scaffold(
       appBar: AppBar(
