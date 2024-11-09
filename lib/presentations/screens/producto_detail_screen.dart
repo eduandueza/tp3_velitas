@@ -41,7 +41,7 @@ class ProductoDetailScreen extends ConsumerWidget {
               const LogoWidget(),
               const SizedBox(height: 20),
               Center(
-                child: ProductImageWidget(imageUrl: product.imageUrl ?? 'assets/images/default_image.png'),
+                child: ProductImageWidget(imageUrl: product.imageUrl ?? 'lib/assets/aro2.webp'),
               ),
               const SizedBox(height: 20),
               _buildProductInfo(context, product),
