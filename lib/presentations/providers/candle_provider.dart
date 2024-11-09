@@ -42,7 +42,7 @@ class CandleProvider extends StateNotifier<List<Candle>> {
   }
 
  // Método para obtener una vela específica por su ID
-  Future<Candle?> getCandleById(String id) async {
+  /*Future<Candle?> getCandleById(String id) async {
     try {
       final docSnapshot = await db.collection('products').doc(id).get();
       if (docSnapshot.exists) {
@@ -53,7 +53,18 @@ class CandleProvider extends StateNotifier<List<Candle>> {
       print("Error obteniendo vela por ID: $e");
       return null;
     }
+  }*/
+
+  Candle? getCandleById(String id) {
+  // Devuelve el Candle si existe en el state, o null si no se encuentra
+    try {
+    // Intenta encontrar el Candle con el ID proporcionado
+    return state.firstWhere((candle) => candle.id == id);
+  } catch (e) {
+    // Si no se encuentra, devuelve null
+    return null;
   }
+}
 
   // Método para obtener todas las velas de Firestore
   Future<void> getAllCandles() async {

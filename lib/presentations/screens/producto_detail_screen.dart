@@ -18,10 +18,15 @@ class ProductoDetailScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) { 
     //final product = products.firstWhere((product) => product.id == productId);
+    //final product = candleProvider.getCandleById(productId);
+    final product = ref.watch(candleProvider.notifier).getCandleById(productId);
 
-    final product = candleProvider.getCandleById(productId);
-
-
+    if (product == null) {
+     return Scaffold(
+    appBar: AppBar(title: Text("Producto no encontrado")),
+    body: Center(child: Text("El producto no existe.")),
+  );
+}
     return Scaffold(
       appBar: AppBar(
         leading: const BackButtonWidget(),
@@ -36,7 +41,7 @@ class ProductoDetailScreen extends ConsumerWidget {
               const LogoWidget(),
               const SizedBox(height: 20),
               Center(
-                child: ProductImageWidget(imageUrl: product.imageUrl),
+                child: ProductImageWidget(imageUrl: product.imageUrl ?? 'assets/images/default_image.png'),
               ),
               const SizedBox(height: 20),
               _buildProductInfo(context, product),
@@ -112,6 +117,4 @@ class ProductoDetailScreen extends ConsumerWidget {
     );
   }}
 
-extension on StateNotifierProvider<CandleProvider, List<Candle>> {
-  getCandleById(String productId) {}
-}
+

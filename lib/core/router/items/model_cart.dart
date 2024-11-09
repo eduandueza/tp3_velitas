@@ -13,3 +13,4 @@ class Cart {
     required this.total,
   });
 }
+
