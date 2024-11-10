@@ -45,4 +45,6 @@ class Cart {
       total: total,
     );
   }
+
+  toMap() {}
 }

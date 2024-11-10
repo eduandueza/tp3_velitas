@@ -2,10 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_application_1/core/router/items/modelo_cartItem.dart';
 
-class CarritoProvider extends StateNotifier<List<CartItem>> {
+class CartItemProvider extends StateNotifier<List<CartItem>> {
   final FirebaseFirestore db;
 
-  CarritoProvider(this.db) : super([]);
+  CartItemProvider(this.db) : super([]);
 
   // Cargar el carrito desde Firestore
   Future<void> loadCart() async {
@@ -89,6 +89,6 @@ class CarritoProvider extends StateNotifier<List<CartItem>> {
   double get total => state.fold(0, (sum, item) => sum + (item.price * item.quantity));
 }
 
-final carritoProvider = StateNotifierProvider<CarritoProvider, List<CartItem>>((ref) {
-  return CarritoProvider(FirebaseFirestore.instance);
+final carritoProvider = StateNotifierProvider<CartItemProvider, List<CartItem>>((ref) {
+  return CartItemProvider(FirebaseFirestore.instance);
 });

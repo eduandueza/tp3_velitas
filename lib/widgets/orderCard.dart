@@ -5,7 +5,7 @@ import 'package:flutter_application_1/widgets/cartDetails.dart';
 import '../core/router/items/model_order.dart';
 
 class OrderCard  extends StatelessWidget {
-  final Order order ;
+  final UserOrder order ;
 
   const OrderCard ({
     super.key,

@@ -3,7 +3,7 @@ import 'package:flutter_application_1/core/router/items/modelo_cartItem.dart';
 
 import 'package:flutter_application_1/domain/candle.dart';
 import 'package:flutter_application_1/presentations/providers/candle_provider.dart';
-import 'package:flutter_application_1/presentations/providers/carrito_provider.dart';
+import 'package:flutter_application_1/presentations/providers/cartItem_provider.dart';
 import 'package:flutter_application_1/widgets/back_button.dart';
 import 'package:flutter_application_1/widgets/logo_widget.dart';
 import 'package:flutter_application_1/widgets/main_menu.dart';
@@ -108,7 +108,7 @@ class ProductoDetailScreen extends ConsumerWidget {
         final cartNotifier = ref.read(carritoProvider.notifier);
         cartNotifier.addItem(
           CartItem(
-            id: product.id, // ID temporal único
+            id: DateTime.now().toString(), // ID temporal único
             name: product.name,
             price: product.price,
           ),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/presentations/providers/carrito_provider.dart';
+import 'package:flutter_application_1/presentations/providers/cartItem_provider.dart';
 import 'package:flutter_application_1/widgets/back_button.dart';
 import 'package:flutter_application_1/widgets/logo_widget.dart';
 import 'package:flutter_application_1/widgets/main_menu.dart';
@@ -111,7 +111,7 @@ class CarritoScreen extends ConsumerWidget {
 
                             ref.read(carritosProvider.notifier).addCart(newCart);
 
-                            ref.read(carritoProvider.notifier).clearCart(); 
+                           // ref.read(carritoProvider.notifier).clearCart(); 
                             
                             Navigator.of(context).pop();
 

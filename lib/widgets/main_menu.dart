@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/presentations/providers/carrito_provider.dart';
+import 'package:flutter_application_1/presentations/providers/cartItem_provider.dart';
 import 'package:flutter_application_1/presentations/providers/menu_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
