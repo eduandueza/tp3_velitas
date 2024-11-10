@@ -46,11 +46,14 @@ class LoginScreen extends ConsumerWidget {
               onPressed: () {
                 // Cerrar el teclado al presionar el botón
                 FocusScope.of(context).unfocus();
+                
 
                 String email = emailController.text;
                 String password = passwordController.text;
 
-                ref.read(authProvider.notifier).logIn(email, password);
+                ref.read(authProvider.notifier).login(email, password);
+
+                //LLAMAR A EL METODO LOGIN DEL AUTH
               },
             ),
             const SizedBox(height: 10),

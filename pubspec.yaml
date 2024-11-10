@@ -12,6 +12,7 @@ dependencies:
   firebase_core: ^2.32.0  # Agregado para Firebase
   cloud_firestore: ^4.8.0  # Agregado para Firestore
   flutter_riverpod: ^2.5.3
+  firebase_auth: ^4.16.0
 
 dev_dependencies:
   flutter_lints: ^4.0.0

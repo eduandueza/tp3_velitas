@@ -1,23 +1,54 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_application_1/presentations/providers/user_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-// NO TIENE FIREBASE
-final authProvider = StateNotifierProvider<AuthNotifier, bool>(
-  (ref) => AuthNotifier(),
-);
+class AuthNotifier extends StateNotifier<User?> {
+  final FirebaseAuth _auth;
 
-class AuthNotifier extends StateNotifier<bool> {
-  AuthNotifier() : super(false); 
+  AuthNotifier(this._auth) : super(null) {
+    // escucha el estado del usuario actual en Firebase
+    _auth.authStateChanges().listen((user) {
+      state = user;
+    });
+  }
 
-  void logIn(String email, String password) {
-    if (email == "test@aaaa.com" && password == "mati") {
-      state = true; 
-    } else {
+  
+  Future<void> login(String email, String password) async {
+    try {
+      await _auth.signInWithEmailAndPassword(email: email, password: password);
       
-      print('Credenciales incorrectas');
+    } catch (e) {
+      print("Error de inicio de sesion: $e");
+      throw e;
     }
   }
 
-  void logOut() {
-    state = false; 
+  
+   Future<void> register(String email, String password) async {
+    try {
+    
+    UserCredential userCredential = await _auth.createUserWithEmailAndPassword(email: email, password: password);
+    //print("Usuario creado: ${userCredential.user?.uid}"); // Verifica que el usuario se creó correctamente
+    
+  } catch (e,stackTrace) {
+    print("Error de registro, FALLO EN EL AUTH AQQUI2: $e");
+    print("Detalles del error: $stackTrace");
+    throw e;
+  }
+  }
+
+  
+  Future<void> logout() async {
+    await _auth.signOut();
+  }
+
+  String? getUid() {
+    return state?.uid; 
   }
 }
+
+
+final authProvider = StateNotifierProvider<AuthNotifier, User?>((ref) {
+  return AuthNotifier(FirebaseAuth.instance);
+});

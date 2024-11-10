@@ -28,8 +28,43 @@ class UserData {
       name: name ?? this.name,
       email: email ?? this.email,
       photoUrl: photoUrl ?? this.photoUrl,
-      addresses: addresses ?? this.addresses,
+     addresses: addresses ?? this.addresses,
       rol: rol ?? this.rol
     );
   }
+
+
+static UserData anonymous = UserData(
+  id: '12345',
+  name: 'Juan Pérez',
+  email: 'juan.perez@ejemplo.com',
+  photoUrl: 'https://static.wixstatic.com/media/af1176_cd1cc93602cf465fa5e78b3146f4c505~mv2.jpg/v1/fill/w_560,h_840,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/IMG_6044_JPG.jpg',
+  addresses: [
+    'Calle Falsa 123, Ciudad, País',
+    'Avenida Siempre Viva 742, Ciudad, País'
+  ],
+  rol: 'USUARIO',
+  );
+
+ factory UserData.fromFirebaseToCode(Map<String, dynamic> data, String userId) {
+    return UserData(
+      id: userId,
+      name: data['name'] ?? '',
+      email: data['email'] ?? '',
+      photoUrl: data['photoUrl'] ?? '',
+      addresses: List<String>.from(data['addresses'] ?? []),
+      rol: data['rol'] ?? 'USUARIO',
+    );
+  }
+
+  
+  Map<String, dynamic> toFirebase() {
+    return {
+      'name': name,
+      'email': email,
+      'photoUrl': photoUrl,
+      'rol': rol,
+    };
+  }
+
 }
