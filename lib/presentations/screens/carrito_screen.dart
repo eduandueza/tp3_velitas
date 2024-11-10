@@ -110,6 +110,7 @@ class CarritoScreen extends ConsumerWidget {
                              ref.read(orderProvider.notifier).addOrder(newCart);
 
                             ref.read(carritosProvider.notifier).addCart(newCart);
+                            ref.read(carritoProvider.notifier).resetearCartItemProvider();
 
                            // ref.read(carritoProvider.notifier).clearCart(); 
                             

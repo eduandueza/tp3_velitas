@@ -19,6 +19,10 @@ class CartItemProvider extends StateNotifier<List<CartItem>> {
     }
   }
 
+  void resetearCartItemProvider() {
+    state = []; 
+  }
+
   Future<void> addItem(CartItem item) async {
     try {
       final existingItemIndex = state.indexWhere((cartItem) => cartItem.id == item.id);
