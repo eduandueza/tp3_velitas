@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/core/router/items/modelo_carrito.dart';
+import 'package:flutter_application_1/core/router/items/modelo_cartItem.dart';
 
 import 'package:flutter_application_1/domain/candle.dart';
 import 'package:flutter_application_1/presentations/providers/candle_provider.dart';
@@ -41,7 +41,14 @@ class ProductoDetailScreen extends ConsumerWidget {
               const LogoWidget(),
               const SizedBox(height: 20),
               Center(
-                child: ProductImageWidget(imageUrl: product.imageUrl ?? 'lib/assets/aro2.webp'),
+                child: 
+                  Image.network(
+                    product.imageUrl ?? 'https://via.placeholder.com/100',
+                    height: 200,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                  ),
+
               ),
               const SizedBox(height: 20),
               _buildProductInfo(context, product),
@@ -94,27 +101,34 @@ class ProductoDetailScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildAddToCartButton(BuildContext context, Candle product, WidgetRef ref) {
-    return Center(
-      child: ElevatedButton.icon(
-        onPressed: () {
-          final cartNotifier = ref.read(carritoProvider.notifier); 
-          cartNotifier.addItem(CartItem(name: product.name, price: product.price));
-          
-          ScaffoldMessenger.of(context).hideCurrentSnackBar(); // COMO SE HACIA ESTO para esconder la alerta, esto soluciona a medias
+ Widget _buildAddToCartButton(BuildContext context, Candle product, WidgetRef ref) {
+  return Center(
+    child: ElevatedButton.icon(
+      onPressed: () {
+        final cartNotifier = ref.read(carritoProvider.notifier);
+        cartNotifier.addItem(
+          CartItem(
+            id: product.id, // ID temporal único
+            name: product.name,
+            price: product.price,
+          ),
+        );
 
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('${product.name} agregado al carrito!')),
-          );
-        },
-        icon: const Icon(Icons.shopping_cart),
-        label: const Text('Agregar al carrito'),
-        style: ElevatedButton.styleFrom(
-          padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 25),
-          textStyle: Theme.of(context).textTheme.labelLarge?.copyWith(fontSize: 18),
-        ),
+        ScaffoldMessenger.of(context).hideCurrentSnackBar(); // Solución para esconder la alerta
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('${product.name} agregado al carrito!')),
+        );
+      },
+      icon: const Icon(Icons.shopping_cart),
+      label: const Text('Agregar al carrito'),
+      style: ElevatedButton.styleFrom(
+        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 25),
+        textStyle: Theme.of(context).textTheme.labelLarge?.copyWith(fontSize: 18),
       ),
-    );
-  }}
+    ),
+  );
+}
+}
 
 

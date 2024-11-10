@@ -1,57 +1,48 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../core/router/items/model_cart.dart';
 
-
-// HAY QUE VOLAR ESTO DPS, le pifie. era Order y no Cart. me acorde dps del estado del pedido. NESTO VIVE AMIGA , Milei Tambien 
+final carritosProvider = StateNotifierProvider<CartNotifier, List<Cart>>(
+  (ref) => CartNotifier(FirebaseFirestore.instance),
+);
 
 class CartNotifier extends StateNotifier<List<Cart>> {
-  CartNotifier() : super([]);
+  final FirebaseFirestore db;
 
-  void addCart(Cart cart) {
-    state = [...state, cart];
-    //agregar lo de fb
+  CartNotifier(this.db) : super([]) {
+    getAllCarts();
   }
 
-  void deleteCart(String id) {
-    state = state.where((cart) => cart.id != id).toList();
+  Future<void> addCart(Cart cart) async {
+    final docRef = db.collection('cart').doc();
+    try {
+      final newCart = cart.copyWith(id: docRef.id);
+      await docRef.set(newCart.toFirestore());
+      state = [...state, newCart]; // Agrega el nuevo carrito al estado
+    } catch (e) {
+      print(e);
+      print("ERROR CONEXIÓN FIREBASE al agregar carrito");
+    }
   }
-   //agregar lo de fb 
+
+  Future<void> deleteCart(String id) async {
+    try {
+      await db.collection('cart').doc(id).delete();
+      state = state.where((cart) => cart.id != id).toList();
+    } catch (e) {
+      print(e);
+      print("ERROR CONEXIÓN FIREBASE al eliminar carrito");
+    }
+  }
+
+  Future<void> getAllCarts() async {
+    try {
+      final querySnapshot = await db.collection('cart').get();
+      state = querySnapshot.docs.map((doc) {
+        return Cart.fromFirestore(doc.data() as Map<String, dynamic>, doc.id);
+      }).toList();
+    } catch (e) {
+      print(e);
+    }
+  }
 }
-
-/* Generador de datos simulados , esto se saca una vez hecho de lo FB
-List<Cart> generarCarritosSimulados(int cantidad) {
-  List<Cart> carritos = [];
-  for (var i = 1; i <= cantidad; i++) {
-    final items = [
-      CartItem(name: 'Vela Aromática', price: 10.99, quantity: 2),
-      CartItem(name: 'Vela de Cera de Abeja', price: 15.50, quantity: 1),
-    ];
-    final total = items.fold(
-      0.0,
-      (suma, item) => suma + (item.price * item.quantity),
-    );
-    carritos.add(Cart(
-      id: 'CART_$i',
-      fechaCompra: DateTime.now().subtract(Duration(days: Random().nextInt(30))),
-      items: items,
-      total: total,
-    ));
-  }
-  return carritos;
-}*/
-
-
-/*final carritosProvider = StateNotifierProvider<CartNotifier, List<Cart>>((ref) {
-  return CartNotifier();
-}); esto deberia ir pero con firebase*/
-
-
-// aca esta la version para la simulacion con datos en memoria
-// se establece como provider pero esta mal , ya que carrito no deberias ser provider
-// sino stateNotifierProvider, pero viene bien para el ejemplo de ahora hasta este 
-// lo de FB
-
-final carritosProvider = StateNotifierProvider<CartNotifier, List<Cart>>((ref) {
-  return CartNotifier();
-});
