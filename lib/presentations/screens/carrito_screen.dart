@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/presentations/providers/cartItem_provider.dart';
+import 'package:flutter_application_1/presentations/providers/cartPendiente_provider.dart';
 import 'package:flutter_application_1/widgets/back_button.dart';
 import 'package:flutter_application_1/widgets/logo_widget.dart';
 import 'package:flutter_application_1/widgets/main_menu.dart';
@@ -16,9 +17,8 @@ class CarritoScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final cartItems = ref.watch(carritoProvider);
-    //final cartProvider= ref.watch(carritosProvider);
-
+    final provider = ref.watch(cartPendienteProvider);
+    final cartItems = provider?.items ?? []; // nos aseguramos que no sea null cartItems, a pesar de que NUNCA puede ser null, flutter chilla. odio flutter
     double total = cartItems.fold(0, (sum, item) {
       return sum + (item.price * item.quantity);
     });
@@ -43,10 +43,10 @@ class CarritoScreen extends ConsumerWidget {
                   trailing: QuantityWidget(
                     cantidad: item.quantity,
                     aumentarCantidad: () {
-                      ref.read(carritoProvider.notifier).increaseQuantity(item.name);
+                      ref.read(cartPendienteProvider.notifier).increaseQuantity(item.name);
                     },
                     disminuirCantidad: () {
-                      ref.read(carritoProvider.notifier).decreaseQuantity(item.name);
+                      ref.read(cartPendienteProvider.notifier).decreaseQuantity(item.name);
                     },
                   ),
                 );
@@ -62,7 +62,7 @@ class CarritoScreen extends ConsumerWidget {
           ),
           ElevatedButton(
             onPressed: () {
-              // verifica si el carrito está vacío
+              // Verifica si el carrito está vacío
               if (cartItems.isEmpty) {
                 showDialog(
                   context: context,
@@ -73,7 +73,7 @@ class CarritoScreen extends ConsumerWidget {
                       actions: [
                         TextButton(
                           onPressed: () {
-                            Navigator.of(context).pop(); 
+                            Navigator.of(context).pop();
                           },
                           child: const Text('OK'),
                         ),
@@ -97,26 +97,22 @@ class CarritoScreen extends ConsumerWidget {
                         ),
                         TextButton(
                           onPressed: () {
-                             //agregando carrito
+                            // Agregando carrito a los pedidos pendientes
                             final newCart = Cart(
-                              id: DateTime.now().millisecondsSinceEpoch.toString(), 
+                              id: DateTime.now().millisecondsSinceEpoch.toString(),
                               fechaCompra: DateTime.now(),
-                              items: List.from(cartItems), 
+                              items: List.from(cartItems),
                               total: total,
                             );
-                            
-                           
-                            
-                             ref.read(orderProvider.notifier).addOrder(newCart);
 
-                            ref.read(carritosProvider.notifier).addCart(newCart);
+                            // Agregar al carrito pendiente
+                            //ref.read(cartPendienteProvider.notifier).addCart(newCart);
 
-                           // ref.read(carritoProvider.notifier).clearCart(); 
-                            
+                            // Vaciar carrito pendiente
+                            ref.read(cartPendienteProvider.notifier).clearCartPendiente();
+
+                            // Redirigir a pantalla de compra aprobada
                             Navigator.of(context).pop();
-
-
-
                             context.go('/aprobada');
                           },
                           child: const Text('Sí'),
