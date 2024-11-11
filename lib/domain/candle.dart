@@ -48,15 +48,16 @@ class Candle {
     };
   }
 
-  // Método para copiar el objeto Candle y cambiar el id o la imageUrl
-  Candle copyWith({String? id, String? imageUrl}) {
+  
+ // Método para copiar el objeto Candle y cambiar el id, stock o la imageUrl
+  Candle copyWith({String? id, int? stock, String? imageUrl}) {
     return Candle(
       id: id ?? this.id,
       description: description,
       name: name,
       price: price,
       scentRef: scentRef,
-      stock: stock,
+      stock: stock ?? this.stock, // Cambia el stock si se pasa un nuevo valor
       typeRef: typeRef,
       imageUrl: imageUrl ?? this.imageUrl, // Copia la imageUrl si no se proporciona una nueva
     );
