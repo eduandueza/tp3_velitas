@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/presentations/providers/auth_provider.dart';
+import 'package:flutter_application_1/presentations/providers/user_provider.dart';
 import 'package:flutter_application_1/presentations/screens/create_account_screen.dart';
 import 'package:flutter_application_1/widgets/back_button.dart';
 import 'package:flutter_application_1/widgets/custom_button.dart';
@@ -52,6 +53,9 @@ class LoginScreen extends ConsumerWidget {
                 String password = passwordController.text;
 
                 ref.read(authProvider.notifier).login(email, password);
+                /*final authUser = ref.watch(authProvider);
+                final uid= authUser?.uid;
+                ref.read(userProvider.loadUserData(uid));*/
 
                 //LLAMAR A EL METODO LOGIN DEL AUTH
               },
