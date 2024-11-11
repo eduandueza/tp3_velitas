@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/core/router/items/model_order.dart';
 import 'package:flutter_application_1/presentations/providers/cartItem_provider.dart';
 import 'package:flutter_application_1/presentations/providers/cartPendiente_provider.dart';
+import 'package:flutter_application_1/presentations/providers/user_provider.dart';
 import 'package:flutter_application_1/widgets/back_button.dart';
 import 'package:flutter_application_1/widgets/logo_widget.dart';
 import 'package:flutter_application_1/widgets/main_menu.dart';
@@ -17,8 +19,8 @@ class CarritoScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final provider = ref.watch(cartPendienteProvider);
-    final cartItems = provider?.items ?? []; // nos aseguramos que no sea null cartItems, a pesar de que NUNCA puede ser null, flutter chilla. odio flutter
+    final carritosProv = ref.watch(carritoProvider);
+    final cartItems = carritosProv; // Obtén los items del carrito del nuevo provider
     double total = cartItems.fold(0, (sum, item) {
       return sum + (item.price * item.quantity);
     });
@@ -43,10 +45,10 @@ class CarritoScreen extends ConsumerWidget {
                   trailing: QuantityWidget(
                     cantidad: item.quantity,
                     aumentarCantidad: () {
-                      ref.read(cartPendienteProvider.notifier).increaseQuantity(item.name);
+                      ref.read(carritoProvider.notifier).increaseQuantity(item.id);
                     },
                     disminuirCantidad: () {
-                      ref.read(cartPendienteProvider.notifier).decreaseQuantity(item.name);
+                      ref.read(carritoProvider.notifier).decreaseQuantity(item.id);
                     },
                   ),
                 );
@@ -104,12 +106,19 @@ class CarritoScreen extends ConsumerWidget {
                               items: List.from(cartItems),
                               total: total,
                             );
+                            final userData = ref.read(userProvider);
+                            final mail = userData.email;
 
-                            // Agregar al carrito pendiente
-                            //ref.read(cartPendienteProvider.notifier).addCart(newCart);
+                           final newOrder = UserOrder(cart:newCart,email: mail);
 
-                            // Vaciar carrito pendiente
-                            ref.read(cartPendienteProvider.notifier).clearCartPendiente();
+                           // INSERTAR AQUI ADDORDER DE ORDERPROVIDER
+                           ref.read(orderProvider.notifier).addOrder(newOrder);
+
+                            // Aquí se agregaría el carrito a los pedidos pendientes
+                            // ref.read(cartPendienteProvider.notifier).addCart(newCart);
+
+                            // Vaciar carrito actual
+                            ref.read(carritoProvider.notifier).clearCart();
 
                             // Redirigir a pantalla de compra aprobada
                             Navigator.of(context).pop();

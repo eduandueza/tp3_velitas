@@ -11,6 +11,17 @@ import 'package:flutter_application_1/widgets/main_menu.dart';
 import 'package:flutter_application_1/widgets/product_image_widget.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart'; 
 
+import 'package:flutter/material.dart';
+import 'package:flutter_application_1/core/router/items/modelo_cartItem.dart';
+
+import 'package:flutter_application_1/domain/candle.dart';
+import 'package:flutter_application_1/presentations/providers/candle_provider.dart';
+import 'package:flutter_application_1/presentations/providers/cartItem_provider.dart';
+import 'package:flutter_application_1/widgets/back_button.dart';
+import 'package:flutter_application_1/widgets/logo_widget.dart';
+import 'package:flutter_application_1/widgets/main_menu.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 class ProductoDetailScreen extends ConsumerWidget { 
   final String productId;
 
@@ -102,21 +113,20 @@ class ProductoDetailScreen extends ConsumerWidget {
   Widget _buildAddToCartButton(BuildContext context, Candle product, WidgetRef ref) {
     return Center(
       child: ElevatedButton.icon(
-        onPressed: () {
-          final cartPendienteNotifier = ref.read(cartPendienteProvider.notifier);
+        onPressed: () async {
+          final cartItemProvider = ref.read(carritoProvider.notifier);
           
-          
-          cartPendienteNotifier.addItemToCartPendiente(
+           cartItemProvider.addItem(
             CartItem(
-              id: DateTime.now().toString(), //id temporal
+              id: DateTime.now().toString(), // id temporal, puede ser cambiado si necesitas otra lógica
               name: product.name,
               price: product.price,
               quantity: 1, 
             ),
           );
 
-          
-          ScaffoldMessenger.of(context).hideCurrentSnackBar(); //baja el snackbar
+          // Mostrar mensaje de snack bar
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('${product.name} agregado al carrito!')),
           );

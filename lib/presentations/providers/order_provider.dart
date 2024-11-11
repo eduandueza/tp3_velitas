@@ -1,4 +1,5 @@
 import 'package:flutter_application_1/core/router/items/model_order.dart';
+import 'package:flutter_application_1/presentations/providers/user_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../OrderStateEnum.dart';
@@ -11,8 +12,10 @@ class OrderNotifier extends StateNotifier<List<UserOrder>> {
 
   OrderNotifier() : super([]);
 
-   void addOrder(Cart cart) async {
-    final UserOrder nuevoPedido = UserOrder(cart: cart, estado: OrderState.EN_CURSO);
+   void addOrder(UserOrder order) async {
+
+
+    final UserOrder nuevoPedido = order;
 
     // Agregar a la lista local
     state = [...state, nuevoPedido];
