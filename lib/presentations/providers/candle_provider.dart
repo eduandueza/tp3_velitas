@@ -41,6 +41,26 @@ class CandleProvider extends StateNotifier<List<Candle>> {
     }
   }
 
+ // Modificación: Método para actualizar el stock
+  Future<void> updateCandleStock(String id, int newStock) async {
+    try {
+      final docRef = db.collection('products').doc(id);
+      await docRef.update({'stock': newStock}); // Actualiza el stock en Firebase
+
+      // Actualiza el estado local de la vela en la lista
+      state = state.map((candle) {
+        if (candle.id == id) {
+          return candle.copyWith(stock: newStock); // Actualiza el stock localmente
+        }
+        return candle;
+      }).toList();
+    } catch (e) {
+      print('Error actualizando el stock: $e');
+    }
+  }
+
+
+
  // Método para obtener una vela específica por su ID
   /*Future<Candle?> getCandleById(String id) async {
     try {

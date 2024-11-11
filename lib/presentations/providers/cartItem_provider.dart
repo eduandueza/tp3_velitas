@@ -10,7 +10,7 @@ class CartItemProvider extends StateNotifier<List<CartItem>> {
   // Cargar el carrito desde Firestore
   Future<void> loadCart() async {
     try {
-      final querySnapshot = await db.collection('cart').get();
+      final querySnapshot = await db.collection('cartItem').get();
       state = querySnapshot.docs.map((doc) {
         return CartItem.fromMap(doc.data() as Map<String, dynamic>, doc.id);
       }).toList();
@@ -28,7 +28,7 @@ class CartItemProvider extends StateNotifier<List<CartItem>> {
         state = [...state];
         await _updateItemInFirestore(state[existingItemIndex]);
       } else {
-        final docRef = await db.collection('cart').add(item.toMap());
+        final docRef = await db.collection('cartItem').add(item.toMap());
         state = [...state, item.copyWith(id: docRef.id)];
       }
     } catch (e) {
@@ -40,7 +40,7 @@ class CartItemProvider extends StateNotifier<List<CartItem>> {
     try {
       final itemToRemove = state.firstWhere((item) => item.id == itemId);
       state = state.where((item) => item.id != itemId).toList();
-      await db.collection('cart').doc(itemId).delete();
+      await db.collection('cartItem').doc(itemId).delete();
     } catch (e) {
       print('Error al eliminar item del carrito: $e');
     }
@@ -48,7 +48,7 @@ class CartItemProvider extends StateNotifier<List<CartItem>> {
 
   Future<void> _updateItemInFirestore(CartItem item) async {
     try {
-      await db.collection('cart').doc(item.id).update(item.toMap());
+      await db.collection('cartItem').doc(item.id).update(item.toMap());
     } catch (e) {
       print('Error al actualizar item en Firestore: $e');
     }
@@ -76,9 +76,9 @@ class CartItemProvider extends StateNotifier<List<CartItem>> {
 
   Future<void> clearCart() async {
     try {
-      final querySnapshot = await db.collection('cart').get();
+      final querySnapshot = await db.collection('cartItem').get();
       for (var doc in querySnapshot.docs) {
-        await db.collection('cart').doc(doc.id).delete();
+        await db.collection('cartItem').doc(doc.id).delete();
       }
       state = [];
     } catch (e) {
