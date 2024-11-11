@@ -19,8 +19,8 @@ class CustomTextField extends StatelessWidget {
     return TextField(
       controller: controller,
       obscureText: isPassword,
-      enableInteractiveSelection: false, // Desactiva el menú contextual
-      showCursor: false, // Desactiva el cursor
+      enableInteractiveSelection: false, 
+      showCursor: false,
       decoration: InputDecoration(
         labelText: labelText,
         prefixIcon: Icon(icon),

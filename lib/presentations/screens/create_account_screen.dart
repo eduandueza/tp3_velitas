@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/presentations/providers/auth_provider.dart';
 import 'package:flutter_application_1/presentations/providers/user_provider.dart';
-import 'package:flutter_application_1/presentations/screens/login_screen.dart';
 import 'package:flutter_application_1/widgets/back_button.dart';
 import 'package:flutter_application_1/widgets/custom_button.dart';
 import 'package:flutter_application_1/widgets/custom_text_field.dart';
@@ -38,7 +37,7 @@ import 'package:go_router/go_router.dart';
             const LogoWidget(),
             const SizedBox(height: 20),
             const Text(
-              "Let's create your account",
+              "Crear Cuenta",
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 20),

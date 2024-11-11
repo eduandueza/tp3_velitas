@@ -1,54 +1,49 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_application_1/presentations/providers/user_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import 'user_provider.dart';
 
 class AuthNotifier extends StateNotifier<User?> {
   final FirebaseAuth _auth;
-
-  AuthNotifier(this._auth) : super(null) {
-    // escucha el estado del usuario actual en Firebase
+  final Ref ref; 
+  
+  AuthNotifier(this._auth, this.ref) : super(null) {
     _auth.authStateChanges().listen((user) {
       state = user;
+      if (user == null) {
+        ref.read(userProvider.notifier).logout();
+      }
     });
   }
 
-  
   Future<void> login(String email, String password) async {
     try {
       await _auth.signInWithEmailAndPassword(email: email, password: password);
-      
     } catch (e) {
-      print("Error de inicio de sesion: $e");
+      print("Error de inicio de sesión: $e");
       throw e;
     }
   }
 
-  
-   Future<void> register(String email, String password) async {
+  Future<void> register(String email, String password) async {
     try {
-    
-    UserCredential userCredential = await _auth.createUserWithEmailAndPassword(email: email, password: password);
-    //print("Usuario creado: ${userCredential.user?.uid}"); // Verifica que el usuario se creó correctamente
-    
-  } catch (e,stackTrace) {
-    print("Error de registro, FALLO EN EL AUTH AQQUI2: $e");
-    print("Detalles del error: $stackTrace");
-    throw e;
-  }
+      await _auth.createUserWithEmailAndPassword(email: email, password: password);
+    } catch (e) {
+      print("Error de registro: $e");
+      throw e;
+    }
   }
 
-  
   Future<void> logout() async {
     await _auth.signOut();
+    ref.read(userProvider.notifier).logout(); 
   }
 
   String? getUid() {
-    return state?.uid; 
+    return state?.uid;
   }
 }
 
-
 final authProvider = StateNotifierProvider<AuthNotifier, User?>((ref) {
-  return AuthNotifier(FirebaseAuth.instance);
+  return AuthNotifier(FirebaseAuth.instance, ref);
 });

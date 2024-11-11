@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+
 import '../../../OrderStateEnum.dart';
 import '../../../core/router/items/model_cart.dart';
 
@@ -46,6 +46,7 @@ class UserOrder {
       'estado': estado.toString(), // Convierte `estado` a un string para Firestore
     };
   }
+  
 /*
   // Método para crear un `UserOrder` desde un documento de Firestore (opcional)
   factory UserOrder.fromFirestoreMap(Map<String, dynamic> map) {

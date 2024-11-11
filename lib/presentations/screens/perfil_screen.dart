@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/presentations/providers/auth_provider.dart';
 import 'package:flutter_application_1/widgets/main_menu.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -53,10 +54,13 @@ class PerfilScreen extends ConsumerWidget {
                 ),
                 ProfileOption(
                   icon: Icons.logout,
-                  title: "Cerrar sesion",
+                  title: "Cerrar sesión",
                   subtitle: "",
-                  onTap: () {}, // para cuando se haga el login , esto deberia cerrar la sesion y redirigir a /login TODO
-                )
+                  onTap: () async {
+                    await ref.read(authProvider.notifier).logout();
+                    context.push('/login');
+                  }
+                ),
               ],
             ),
           ),
