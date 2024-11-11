@@ -6,10 +6,12 @@ import '../../../core/router/items/model_cart.dart';
 class UserOrder {
   final Cart cart;
   final OrderState estado;
+  final String email;
 
   UserOrder({
     required this.cart,
     this.estado = OrderState.EN_CURSO,
+    required this.email,
   });
 
   Color get color {
@@ -29,6 +31,7 @@ class UserOrder {
     return {
       'cart': cart.toMap(), // Necesitas un método `toMap()` en `Cart`
       'estado': estado.toString().split('.').last, // Guarda el estado como string
+      'email': email,
     };
   }
 
@@ -36,6 +39,7 @@ class UserOrder {
     return UserOrder(
       cart: cart,
       estado: estado ?? this.estado,
+      email: email ?? this.email,
     );
   }
 
@@ -44,6 +48,7 @@ class UserOrder {
     return {
       'cart': cart.toFirestore(), // Asegúrate de que `Cart` también tenga un método similar
       'estado': estado.toString(), // Convierte `estado` a un string para Firestore
+      'email': email,
     };
   }
   

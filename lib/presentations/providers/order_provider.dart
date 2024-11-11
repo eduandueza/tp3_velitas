@@ -1,3 +1,9 @@
+<<<<<<< HEAD
+=======
+import 'package:flutter_application_1/core/router/items/model_order.dart';
+import 'package:flutter_application_1/presentations/providers/user_provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+>>>>>>> f5094bce007f32e6c7e2dc2b3cd8a8f43eec8415
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_application_1/core/router/items/model_order.dart';
 import 'package:flutter_application_1/presentations/providers/user_provider.dart';
@@ -14,8 +20,10 @@ class OrderNotifier extends StateNotifier<List<UserOrder>> {
 
   OrderNotifier() : super([]);
 
-   void addOrder(Cart cart) async {
-    final UserOrder nuevoPedido = UserOrder(cart: cart, estado: OrderState.EN_CURSO);
+   void addOrder(UserOrder order) async {
+
+
+    final UserOrder nuevoPedido = order;
 
     // Agregar a la lista local
     state = [...state, nuevoPedido];

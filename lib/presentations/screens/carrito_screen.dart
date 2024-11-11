@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/core/router/items/model_order.dart';
 import 'package:flutter_application_1/presentations/providers/cartItem_provider.dart';
+import 'package:flutter_application_1/presentations/providers/cartPendiente_provider.dart';
+import 'package:flutter_application_1/presentations/providers/user_provider.dart';
 import 'package:flutter_application_1/widgets/back_button.dart';
 import 'package:flutter_application_1/widgets/logo_widget.dart';
 import 'package:flutter_application_1/widgets/main_menu.dart';
@@ -16,9 +19,8 @@ class CarritoScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final cartItems = ref.watch(carritoProvider);
-    //final cartProvider= ref.watch(carritosProvider);
-
+    final carritosProv = ref.watch(carritoProvider);
+    final cartItems = carritosProv; // Obtén los items del carrito del nuevo provider
     double total = cartItems.fold(0, (sum, item) {
       return sum + (item.price * item.quantity);
     });
@@ -43,10 +45,10 @@ class CarritoScreen extends ConsumerWidget {
                   trailing: QuantityWidget(
                     cantidad: item.quantity,
                     aumentarCantidad: () {
-                      ref.read(carritoProvider.notifier).increaseQuantity(item.name);
+                      ref.read(carritoProvider.notifier).increaseQuantity(item.id);
                     },
                     disminuirCantidad: () {
-                      ref.read(carritoProvider.notifier).decreaseQuantity(item.name);
+                      ref.read(carritoProvider.notifier).decreaseQuantity(item.id);
                     },
                   ),
                 );
@@ -62,7 +64,7 @@ class CarritoScreen extends ConsumerWidget {
           ),
           ElevatedButton(
             onPressed: () {
-              // verifica si el carrito está vacío
+              // Verifica si el carrito está vacío
               if (cartItems.isEmpty) {
                 showDialog(
                   context: context,
@@ -73,7 +75,7 @@ class CarritoScreen extends ConsumerWidget {
                       actions: [
                         TextButton(
                           onPressed: () {
-                            Navigator.of(context).pop(); 
+                            Navigator.of(context).pop();
                           },
                           child: const Text('OK'),
                         ),
@@ -97,26 +99,29 @@ class CarritoScreen extends ConsumerWidget {
                         ),
                         TextButton(
                           onPressed: () {
-                             //agregando carrito
+                            // Agregando carrito a los pedidos pendientes
                             final newCart = Cart(
-                              id: DateTime.now().millisecondsSinceEpoch.toString(), 
+                              id: DateTime.now().millisecondsSinceEpoch.toString(),
                               fechaCompra: DateTime.now(),
-                              items: List.from(cartItems), 
+                              items: List.from(cartItems),
                               total: total,
                             );
-                            
-                           
-                            
-                             ref.read(orderProvider.notifier).addOrder(newCart);
+                            final userData = ref.read(userProvider);
+                            final mail = userData.email;
 
-                            ref.read(carritosProvider.notifier).addCart(newCart);
+                           final newOrder = UserOrder(cart:newCart,email: mail);
 
-                           // ref.read(carritoProvider.notifier).clearCart(); 
-                            
+                           // INSERTAR AQUI ADDORDER DE ORDERPROVIDER
+                           ref.read(orderProvider.notifier).addOrder(newOrder);
+
+                            // Aquí se agregaría el carrito a los pedidos pendientes
+                            // ref.read(cartPendienteProvider.notifier).addCart(newCart);
+
+                            // Vaciar carrito actual
+                            ref.read(carritoProvider.notifier).clearCart();
+
+                            // Redirigir a pantalla de compra aprobada
                             Navigator.of(context).pop();
-
-
-
                             context.go('/aprobada');
                           },
                           child: const Text('Sí'),

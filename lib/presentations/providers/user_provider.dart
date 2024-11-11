@@ -68,7 +68,7 @@ class UserNotifier extends StateNotifier<UserData> {
       name: name,
       email: email,
       photoUrl: photoUrl ?? '', 
-      rol: 'USUARIO',
+      rol: 'ADMIN',
     );
 
     try {

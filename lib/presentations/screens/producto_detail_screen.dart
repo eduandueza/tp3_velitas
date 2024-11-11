@@ -4,11 +4,23 @@ import 'package:flutter_application_1/core/router/items/modelo_cartItem.dart';
 import 'package:flutter_application_1/domain/candle.dart';
 import 'package:flutter_application_1/presentations/providers/candle_provider.dart';
 import 'package:flutter_application_1/presentations/providers/cartItem_provider.dart';
+import 'package:flutter_application_1/presentations/providers/cartPendiente_provider.dart';
 import 'package:flutter_application_1/widgets/back_button.dart';
 import 'package:flutter_application_1/widgets/logo_widget.dart';
 import 'package:flutter_application_1/widgets/main_menu.dart';
 import 'package:flutter_application_1/widgets/product_image_widget.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart'; 
+
+import 'package:flutter/material.dart';
+import 'package:flutter_application_1/core/router/items/modelo_cartItem.dart';
+
+import 'package:flutter_application_1/domain/candle.dart';
+import 'package:flutter_application_1/presentations/providers/candle_provider.dart';
+import 'package:flutter_application_1/presentations/providers/cartItem_provider.dart';
+import 'package:flutter_application_1/widgets/back_button.dart';
+import 'package:flutter_application_1/widgets/logo_widget.dart';
+import 'package:flutter_application_1/widgets/main_menu.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ProductoDetailScreen extends ConsumerWidget { 
   final String productId;
@@ -17,16 +29,15 @@ class ProductoDetailScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) { 
-    //final product = products.firstWhere((product) => product.id == productId);
-    //final product = candleProvider.getCandleById(productId);
     final product = ref.watch(candleProvider.notifier).getCandleById(productId);
 
     if (product == null) {
-     return Scaffold(
-    appBar: AppBar(title: Text("Producto no encontrado")),
-    body: Center(child: Text("El producto no existe.")),
-  );
-}
+      return Scaffold(
+        appBar: AppBar(title: Text("Producto no encontrado")),
+        body: Center(child: Text("El producto no existe.")),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         leading: const BackButtonWidget(),
@@ -41,14 +52,12 @@ class ProductoDetailScreen extends ConsumerWidget {
               const LogoWidget(),
               const SizedBox(height: 20),
               Center(
-                child: 
-                  Image.network(
-                    product.imageUrl ?? 'https://via.placeholder.com/100',
-                    height: 200,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                  ),
-
+                child: Image.network(
+                  product.imageUrl ?? 'https://via.placeholder.com/100',
+                  height: 200,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                ),
               ),
               const SizedBox(height: 20),
               _buildProductInfo(context, product),
@@ -101,34 +110,35 @@ class ProductoDetailScreen extends ConsumerWidget {
     );
   }
 
- Widget _buildAddToCartButton(BuildContext context, Candle product, WidgetRef ref) {
-  return Center(
-    child: ElevatedButton.icon(
-      onPressed: () {
-        final cartNotifier = ref.read(carritoProvider.notifier);
-        cartNotifier.addItem(
-          CartItem(
-            id: DateTime.now().toString(), // ID temporal único
-            name: product.name,
-            price: product.price,
-          ),
-        );
+  Widget _buildAddToCartButton(BuildContext context, Candle product, WidgetRef ref) {
+    return Center(
+      child: ElevatedButton.icon(
+        onPressed: () async {
+          final cartItemProvider = ref.read(carritoProvider.notifier);
+          
+           cartItemProvider.addItem(
+            CartItem(
+              id: DateTime.now().toString(), // id temporal, puede ser cambiado si necesitas otra lógica
+              name: product.name,
+              price: product.price,
+              quantity: 1, 
+            ),
+          );
 
-        ScaffoldMessenger.of(context).hideCurrentSnackBar(); // Solución para esconder la alerta
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('${product.name} agregado al carrito!')),
-        );
-      },
-      icon: const Icon(Icons.shopping_cart),
-      label: const Text('Agregar al carrito'),
-      style: ElevatedButton.styleFrom(
-        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 25),
-        textStyle: Theme.of(context).textTheme.labelLarge?.copyWith(fontSize: 18),
+          // Mostrar mensaje de snack bar
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('${product.name} agregado al carrito!')),
+          );
+        },
+        icon: const Icon(Icons.shopping_cart),
+        label: const Text('Agregar al carrito'),
+        style: ElevatedButton.styleFrom(
+          padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 25),
+          textStyle: Theme.of(context).textTheme.labelLarge?.copyWith(fontSize: 18),
+        ),
       ),
-    ),
-  );
+    );
+  }
 }
-}
-
 
