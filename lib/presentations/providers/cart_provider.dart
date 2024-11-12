@@ -17,7 +17,7 @@ class CartNotifier extends StateNotifier<List<Cart>> {
     final docRef = db.collection('cart').doc();
     try {
       final newCart = cart.copyWith(id: docRef.id);
-      await docRef.set(newCart.toFirestore());
+      await docRef.set(newCart.toFirestore()); // TOCASTE ACA deberia poner antes el newCart
       state = [...state, newCart]; // Agrega el nuevo carrito al estado
     } catch (e) {
       print(e);

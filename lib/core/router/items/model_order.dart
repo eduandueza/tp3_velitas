@@ -27,9 +27,9 @@ class UserOrder {
     }
   }
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toMap(String a,int b) {
     return {
-      'cart': cart.toMap(), // Necesitas un método `toMap()` en `Cart`
+      'cart': cart.toMap(), // Necesitas un método `toMap()` en `Cart` //ACA ROMPEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE METODO TO MAP
       'estado': estado.toString().split('.').last, // Guarda el estado como string
       'email': email,
     };
@@ -43,6 +43,27 @@ class UserOrder {
     );
   }
 
+  factory UserOrder.fromFirestoreMap(Map<String, dynamic> map) {
+  try {
+    print("Datos de cart recibidos: ${map['cart']}");
+    print("Datos de cart recibidos: ${map['cart']}");
+    print("Datos de cart recibidos: ${map['cart']}");
+    return UserOrder(
+      cart: Cart.fromFirestore2(map['cart']), // Deserializa el carrito
+      estado: OrderState.values.firstWhere(
+        (e) => e.toString() == map['estado'],
+        orElse: () => OrderState.EN_CURSO, // Valor por defecto si no se encuentra el estado
+      ),
+      email: map['email'], // El campo email
+    );
+  } catch (e) {
+    print("Error al deserializar la orden: $e");
+    // Podrías devolver una orden vacía o manejar el error de otra manera
+    throw Exception("Error al deserializar la orden");
+  }
+}
+
+
   // Método para convertir la orden a un mapa compatible con Firestore
   Map<String, dynamic> toFirestoreMap() {
     return {
@@ -51,6 +72,10 @@ class UserOrder {
       'email': email,
     };
   }
+
+
+}
+
 /*
   // Método para crear un `UserOrder` desde un documento de Firestore (opcional)
   factory UserOrder.fromFirestoreMap(Map<String, dynamic> map) {
@@ -63,6 +88,3 @@ class UserOrder {
     );
   }
 */
-
-}
-

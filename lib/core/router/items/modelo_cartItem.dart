@@ -12,12 +12,18 @@ class CartItem {
   });
 
   factory CartItem.fromMap(Map<String, dynamic> data, String documentId) {
-    return CartItem(
+   
+   try {
+     return CartItem(
       id: documentId,
       name: data['name'] as String,
       price: (data['price'] as num).toDouble(),
       quantity: data['quantity'] as int,
     );
+   } catch (e){
+     throw Exception("Error al deserializar el CARTITEM: $e");
+   }
+   
   }
 
   Map<String, dynamic> toMap() {

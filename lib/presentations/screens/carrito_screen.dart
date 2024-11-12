@@ -99,18 +99,24 @@ class CarritoScreen extends ConsumerWidget {
                         ),
                         TextButton(
                           onPressed: () {
+
+                            final userData = ref.read(userProvider);
+                            final mail = userData.email;
                             // Agregando carrito a los pedidos pendientes
                             final newCart = Cart(
+                              email:mail,
                               id: DateTime.now().millisecondsSinceEpoch.toString(),
                               fechaCompra: DateTime.now(),
                               items: List.from(cartItems),
                               total: total,
                             );
-                            final userData = ref.read(userProvider);
-                            final mail = userData.email;
+                            
 
                            final newOrder = UserOrder(cart:newCart,email: mail);
-
+                           
+                           
+                          //AQUI SE DEBERIA GUARDAR "newCart" en la base de datos
+                           ref.read(carritosProvider.notifier).addCart(newCart);
                            // INSERTAR AQUI ADDORDER DE ORDERPROVIDER
                            ref.read(orderProvider.notifier).addOrder(newOrder);
 
