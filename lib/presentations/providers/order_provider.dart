@@ -1,9 +1,8 @@
-import 'package:flutter_application_1/core/router/items/model_order.dart';
-import 'package:flutter_application_1/presentations/providers/user_provider.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_application_1/core/router/items/model_order.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../../OrderStateEnum.dart';
-import '../../core/router/items/model_cart.dart';
 
 
 
