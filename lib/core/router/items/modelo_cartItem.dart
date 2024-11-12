@@ -34,7 +34,7 @@ class CartItem {
     };
   }
 
-  // Método copyWith
+  
   CartItem copyWith({
     String? id,
     String? name,

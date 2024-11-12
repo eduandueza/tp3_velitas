@@ -19,31 +19,32 @@ class OrderNotifier extends StateNotifier<List<UserOrder>> {
     await db.collection('orders').add(nuevoPedido.toFirestoreMap());
   }
 
-   Future<void> getOrdersByEmail(String email) async {
-    try {
-      final querySnapshot = await db
-          .collection('orders')
-          .where('email', isEqualTo: email) // Filtramos por email
-          .get();
+   Future<List<UserOrder>> getOrdersByEmail(String email) async {
+  try {
+    
+    final querySnapshot = await db
+        .collection('orders')
+        .where('email', isEqualTo: email) 
+        .get();
 
-      // Convertir los documentos obtenidos a objetos UserOrder
-      final orders = querySnapshot.docs.map((doc) {
-        return UserOrder.fromFirestoreMap(doc.data() as Map<String, dynamic>);
-      }).toList();
+    
+    final orders = querySnapshot.docs.map((doc) {
+      return UserOrder.fromFirestoreMap(doc.data() as Map<String, dynamic>);
+    }).toList();
 
-      // Actualizar el estado con las órdenes encontradas
-      state = orders;
+    
+    return orders;
 
-    } catch (e) {
-      print("Error al obtener las órdenes: $e");
-      // Si hay error, podemos dejar el estado vacío o manejar el error de otra manera
-      state = [];
-    }
+  } catch (e) {
+    print("Error al obtener las órdenes: $e");
+    
+    return [];
   }
+}
 
 
   void updateOrderStatus(String cartId, OrderState nuevoEstado) {
-    // Aquí podrías implementar la lógica para actualizar el estado de un pedido en Firestore si es necesario
+    
   }
 }
 

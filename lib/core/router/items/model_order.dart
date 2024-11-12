@@ -30,7 +30,7 @@ class UserOrder {
   Map<String, dynamic> toMap(String a,int b) {
     return {
       'cart': cart.toMap(), // Necesitas un método `toMap()` en `Cart` //ACA ROMPEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE METODO TO MAP
-      'estado': estado.toString().split('.').last, // Guarda el estado como string
+      'estado': estado.toString().split('.').last, // guarda el estado como string
       'email': email,
     };
   }
@@ -49,26 +49,26 @@ class UserOrder {
     print("Datos de cart recibidos: ${map['cart']}");
     print("Datos de cart recibidos: ${map['cart']}");
     return UserOrder(
-      cart: Cart.fromFirestore2(map['cart']), // Deserializa el carrito
+      cart: Cart.fromFirestore2(map['cart']), 
       estado: OrderState.values.firstWhere(
         (e) => e.toString() == map['estado'],
-        orElse: () => OrderState.EN_CURSO, // Valor por defecto si no se encuentra el estado
+        orElse: () => OrderState.EN_CURSO, 
       ),
-      email: map['email'], // El campo email
+      email: map['email'], 
     );
   } catch (e) {
     print("Error al deserializar la orden: $e");
-    // Podrías devolver una orden vacía o manejar el error de otra manera
+    
     throw Exception("Error al deserializar la orden");
   }
 }
 
 
-  // Método para convertir la orden a un mapa compatible con Firestore
+  
   Map<String, dynamic> toFirestoreMap() {
     return {
-      'cart': cart.toFirestore(), // Asegúrate de que `Cart` también tenga un método similar
-      'estado': estado.toString(), // Convierte `estado` a un string para Firestore
+      'cart': cart.toFirestore(), 
+      'estado': estado.toString(), 
       'email': email,
     };
   }
