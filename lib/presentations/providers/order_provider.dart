@@ -42,6 +42,24 @@ class OrderNotifier extends StateNotifier<List<UserOrder>> {
   }
 }
 
+Future<List<UserOrder>> getAllOrders() async {
+  try {
+    
+    final querySnapshot = await db.collection('orders').get();
+
+    
+    final orders = querySnapshot.docs.map((doc) {
+      return UserOrder.fromFirestoreMap(doc.data() as Map<String, dynamic>);
+    }).toList();
+
+    return orders; 
+  } catch (e) {
+    print("Error al obtener todas las órdenes: $e");
+    
+    return [];
+  }
+}
+
 
   void updateOrderStatus(String cartId, OrderState nuevoEstado) {
     
