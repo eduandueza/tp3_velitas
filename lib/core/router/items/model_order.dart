@@ -4,6 +4,7 @@ import '../../../OrderStateEnum.dart';
 import '../../../core/router/items/model_cart.dart';
 
 class UserOrder {
+  final String id;
   final Cart cart;
   final OrderState estado;
   final String email;
@@ -12,6 +13,7 @@ class UserOrder {
     required this.cart,
     this.estado = OrderState.EN_CURSO,
     required this.email,
+    required this.id,
   });
 
   Color get color {
@@ -29,9 +31,10 @@ class UserOrder {
 
   Map<String, dynamic> toMap(String a,int b) {
     return {
-      'cart': cart.toMap(), // Necesitas un método `toMap()` en `Cart` //ACA ROMPEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE METODO TO MAP
+      'cart': cart.toMap(), // Necesitas un método `toMap()` en `Cart` //ACA  METODO TO MAP
       'estado': estado.toString().split('.').last, // guarda el estado como string
       'email': email,
+      'id' : id
     };
   }
 
@@ -40,6 +43,7 @@ class UserOrder {
       cart: cart,
       estado: estado ?? this.estado,
       email: email ?? this.email,
+      id: id??this.id
     );
   }
 
@@ -55,6 +59,7 @@ class UserOrder {
         orElse: () => OrderState.EN_CURSO, 
       ),
       email: map['email'], 
+      id:map['id']
     );
   } catch (e) {
     print("Error al deserializar la orden: $e");
@@ -70,6 +75,7 @@ class UserOrder {
       'cart': cart.toFirestore(), 
       'estado': estado.toString(), 
       'email': email,
+      'id':id
     };
   }
 

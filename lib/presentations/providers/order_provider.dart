@@ -19,6 +19,8 @@ class OrderNotifier extends StateNotifier<List<UserOrder>> {
     await db.collection('orders').add(nuevoPedido.toFirestoreMap());
   }
 
+  
+
    Future<List<UserOrder>> getOrdersByEmail(String email) async {
   try {
     
@@ -61,9 +63,36 @@ Future<List<UserOrder>> getAllOrders() async {
 }
 
 
-  void updateOrderStatus(String cartId, OrderState nuevoEstado) {
-    
+  Future<void> updateOrderStatus(String orderId, OrderState nuevoEstado) async {
+    try {
+      
+      final querySnapshot = await db
+          .collection('orders')
+          .where('id', isEqualTo: orderId)
+          .limit(1)  
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        final doc = querySnapshot.docs.first;
+
+        
+        await doc.reference.update({
+          'estado': nuevoEstado.toString(), 
+        });
+
+        
+        state = state.map((order) {
+          if (order.id == orderId) {
+            return order.copyWith(estado: nuevoEstado);
+          }
+          return order;
+        }).toList();
+      }
+    } catch (e) {
+      print("Error al actualizar el estado de la orden: $e");
+    }
   }
+
 }
 
 final orderProvider = StateNotifierProvider<OrderNotifier, List<UserOrder>>((ref) {

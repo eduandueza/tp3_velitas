@@ -9,6 +9,7 @@ import 'package:flutter_application_1/widgets/main_menu.dart';
 import 'package:flutter_application_1/widgets/quantity_widget.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../core/router/items/model_cart.dart';
 import '../providers/cart_provider.dart';
@@ -110,9 +111,12 @@ class CarritoScreen extends ConsumerWidget {
                               items: List.from(cartItems),
                               total: total,
                             );
+                            var uuid = Uuid();
+                            String uniqueId = uuid.v4();
+
                             
 
-                           final newOrder = UserOrder(cart:newCart,email: mail);
+                           final newOrder = UserOrder(cart:newCart,email: mail,id:uniqueId);
                            
                            
                           //AQUI SE DEBERIA GUARDAR "newCart" en la base de datos

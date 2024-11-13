@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/core/router/items/model_order.dart';
 import 'package:flutter_application_1/presentations/providers/order_provider.dart';
+import 'package:flutter_application_1/widgets/adminOrderCard.dart';
 import 'package:flutter_application_1/widgets/orderCard.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -42,7 +43,7 @@ class OrdersScreenAdmin extends ConsumerWidget {
             itemCount: orders.length,
             itemBuilder: (context, index) {
               final order = orders[index];
-              return OrderCard(order: order); 
+              return AdminOrderCard(order: order); 
             },
           );
         },
