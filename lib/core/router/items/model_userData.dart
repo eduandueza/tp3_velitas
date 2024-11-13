@@ -78,4 +78,14 @@ static UserData anonymous = UserData(
     };
   }
 
+  Map<String, dynamic> toFirebaseWithAddresses() {
+    return {
+      'name': name,
+      'email': email,
+      'photoUrl': photoUrl,
+      'rol': rol,
+      'addresses':addresses
+    };
+  }
+
 }

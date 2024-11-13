@@ -53,14 +53,29 @@ class UserNotifier extends StateNotifier<UserData> {
 
   void addAddress(String address) {
     state = state.copyWith(addresses: [...state.addresses, address]);
+    updateUserAddresses();
   }
 
   void removeAddress(String address) {
     state = state.copyWith(addresses: state.addresses.where((a) => a != address).toList());
+    updateUserAddresses();
   }
 
   void editAddress(String oldAddress, String newAddress) {
     state = state.copyWith(addresses: state.addresses.map((a) => a == oldAddress ? newAddress : a).toList());
+    updateUserAddresses();  
+  }
+
+   Future<void> updateUserAddresses() async {
+    try {
+      
+      await _db.collection('customers').doc(state.id).update({
+        'addresses': state.addresses, 
+      });
+      print("Direcciones actualizadas exitosamente.");
+    } catch (e) {
+      print("Error al actualizar las direcciones: $e");
+    }
   }
 
   // Método para obtener las direcciones del usuario desde Firestore
@@ -103,12 +118,13 @@ class UserNotifier extends StateNotifier<UserData> {
       name: name,
       email: email,
       photoUrl: photoUrl ?? '', 
-      rol: 'ADMIN',
+      rol: 'USUARIO',
+      addresses: []
     );
 
     try {
       
-      await firestore.collection('customers').doc(userId).set(newUser.toFirebase());
+      await firestore.collection('customers').doc(userId).set(newUser.toFirebaseWithAddresses());
       
     } catch (e) {
       print("Error al crear el usuario en Firestore: $e");
