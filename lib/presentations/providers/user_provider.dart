@@ -5,11 +5,46 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class UserNotifier extends StateNotifier<UserData> {
   UserNotifier() : super(UserData.anonymous);
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
 
+  // Método para obtener todos los usuarios desde Firestore
+  Future<List<UserData>> getAllUsers() async {
+    try {
+      final querySnapshot = await _db.collection('customers').get();
+      final users = querySnapshot.docs.map((doc) {
+        return UserData.fromFirebaseToCode2(doc.data());
+      }).toList();
+
+      return users;
+    } catch (e) {
+      print("Error al obtener los usuarios: $e");
+      return [];
+    }
+    }
   
   void setUserData(UserData userData) {
     state = userData;
   }
+
+  Future<void> removeUserByEmail(String email) async {
+  try {
+    
+    final querySnapshot = await _db.collection('customers')
+      .where('email', isEqualTo: email) 
+      .get();
+
+    
+    if (querySnapshot.docs.isNotEmpty) {
+      
+      await querySnapshot.docs.first.reference.delete();
+      print('Usuario eliminado con éxito.');
+    } else {
+      print('No se encontró un usuario con ese email.');
+    }
+  } catch (e) {
+    print("Error al eliminar el usuario: $e");
+  }
+}
 
   
   void logout() {

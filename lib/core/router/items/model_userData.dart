@@ -57,6 +57,17 @@ static UserData anonymous = UserData(
     );
   }
 
+  factory UserData.fromFirebaseToCode2(Map<String, dynamic> data) {
+    return UserData(
+      id: "pepe",
+      name: data['name'] ?? '',
+      email: data['email'] ?? '',
+      photoUrl: '',
+      addresses: [],
+      rol: data['rol'] ?? 'USUARIO',
+    );
+  }
+
   
   Map<String, dynamic> toFirebase() {
     return {

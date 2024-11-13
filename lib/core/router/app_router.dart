@@ -1,5 +1,6 @@
 import 'package:flutter_application_1/presentations/screens/admin_orders_screen.dart';
 import 'package:flutter_application_1/presentations/screens/admin_products_screen.dart';
+import 'package:flutter_application_1/presentations/screens/admin_users_screen.dart';
 import 'package:flutter_application_1/presentations/screens/approved_screen.dart';
 import 'package:flutter_application_1/presentations/screens/carrito_screen.dart';
 import 'package:flutter_application_1/presentations/screens/create_account_screen.dart';
@@ -55,6 +56,10 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/admin/products',
       builder: (context, state) => const AdminProductsScreen(),
+      ),
+    GoRoute(
+      path: '/admin/users',
+      builder: (context, state) => const AdminUsersScreen(),
       ),   
     GoRoute(
       path: '/aprobada',
