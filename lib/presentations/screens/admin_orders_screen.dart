@@ -11,43 +11,23 @@ class OrdersScreenAdmin extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     
-    final ordersNotifier = ref.read(orderProvider.notifier);
+    final orders = ref.watch(orderProvider);
+    ref.read(orderProvider.notifier).getAllOrders();
+    
 
     return Scaffold(
       appBar: AppBar(
         title: const Text("Pedidos"),
       ),
-      body: FutureBuilder<List<UserOrder>>(
-        
-        future: ordersNotifier.getAllOrders(),
-        builder: (context, snapshot) {
-          
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          
-          
-          if (snapshot.hasError) {
-            return Center(child: Text("Error: ${snapshot.error}"));
-          }
-
-          
-          if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text("No hay órdenes disponibles"));
-          }
-
-          
-          final orders = snapshot.data!;
-
-          return ListView.builder(
-            itemCount: orders.length,
-            itemBuilder: (context, index) {
-              final order = orders[index];
-              return AdminOrderCard(order: order); 
-            },
-          );
-        },
-      ),
+      body: orders.isEmpty
+          ? const Center(child: Text("No hay órdenes disponibles"))
+          : ListView.builder(
+              itemCount: orders.length,
+              itemBuilder: (context, index) {
+                final order = orders[index];
+                return AdminOrderCard(order: order); 
+              },
+            ),
     );
   }
 }
