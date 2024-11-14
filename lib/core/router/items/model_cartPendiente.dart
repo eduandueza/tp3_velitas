@@ -22,7 +22,7 @@ class CartPendiente {
       id: documentId,
       fechaCompra: (data['fecha_compra'] as Timestamp).toDate(),
       items: (data['items'] as List<dynamic>).map((itemData) {
-        return CartItem.fromMap(itemData as Map<String, dynamic>, itemData['id'] as String);
+        return CartItem.fromMap(itemData as Map<String, dynamic>, "random");
       }).toList(),
       total: (data['total'] as num).toDouble(),
       mailPropietario: data['mail_propietario'] as String?, // Si existe
@@ -31,7 +31,7 @@ class CartPendiente {
 
   
 
-  factory CartPendiente.fromFirestore2(Map<String, dynamic> data) {
+  /*factory CartPendiente.fromFirestore2(Map<String, dynamic> data) {
   try {
     // Intentamos convertir los datos de Firestore en el objeto CartPendiente
     return CartPendiente(
@@ -48,7 +48,7 @@ class CartPendiente {
     print('Error al convertir los datos de Firestore a CartPendiente: $e');
     throw new Exception();  // Vuelve a lanzar la excepción para que pueda ser manejada fuera de este método
   }
-}
+}*/
 
   
 

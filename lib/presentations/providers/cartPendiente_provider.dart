@@ -29,7 +29,7 @@ class CartPendienteNotifier extends StateNotifier<CartPendiente?> {
        print(" el querySnapshot TIENE ALGO ");
 
         final doc = querySnapshot.docs.first;
-        state = CartPendiente.fromFirestore2(doc.data() as Map<String, dynamic>);
+        state = CartPendiente.fromFirestore(doc.data() as Map<String, dynamic>,doc.id);
 
       print ("SE CARGO CON EXITO EL CARRITO PENDIENTE DE LA BD");
       print ("SE CARGO CON EXITO EL CARRITO PENDIENTE DE LA BD");
@@ -90,13 +90,62 @@ class CartPendienteNotifier extends StateNotifier<CartPendiente?> {
   }
 }
 
-  void increaseQuantity (String itemname){
+  void increaseQuantity(String itemId) {
+  if (state != null) {
+    
+    final itemIndex = state!.items.indexWhere((item) => item.id == itemId);
 
+    if (itemIndex != -1) {
+      
+      final updatedItem = state!.items[itemIndex].copyWith(
+        quantity: state!.items[itemIndex].quantity + 1,
+      );
+
+      
+      state!.items[itemIndex] = updatedItem;
+
+      
+      state = state!.copyWith(
+        items: List.from(state!.items),
+        total: _calculateTotal(),
+      );
+
+      
+      updateCartPendienteInFirestore();
+    }
   }
+}
 
-  void decreaseQuantity (String itemname){
+void decreaseQuantity(String itemId) {
+  if (state != null) {
+    
+    final itemIndex = state!.items.indexWhere((item) => item.id == itemId);
 
+    if (itemIndex != -1) {
+      final currentItem = state!.items[itemIndex];
+      
+      
+      if (currentItem.quantity > 1) {
+        
+        final updatedItem = currentItem.copyWith(
+          quantity: currentItem.quantity - 1,
+        );
+
+        
+        state!.items[itemIndex] = updatedItem;
+
+        
+        state = state!.copyWith(
+          items: List.from(state!.items),
+          total: _calculateTotal(),
+        );
+
+        
+        updateCartPendienteInFirestore();
+      }
+    }
   }
+}
 
   Future<void> saveCartPendiente() async {
     if (state != null) {
@@ -111,7 +160,7 @@ class CartPendienteNotifier extends StateNotifier<CartPendiente?> {
     }
   }
 
-  Future<void> addItemToCartPendiente(CartItem item) async {
+  Future<void> addItemToCartPendiente2(CartItem item) async {
     if (state != null) {
       state!.items.add(item);
       state = state!.copyWith(items: List.from(state!.items), total: _calculateTotal());
@@ -123,7 +172,33 @@ class CartPendienteNotifier extends StateNotifier<CartPendiente?> {
 
   }
 
-  Future<void> updateCartPendienteInFirestore() async {
+  Future<void> addItemToCartPendiente(CartItem item) async {
+  if (state != null) {
+    
+    CartItem? existingItem;
+
+    try {
+      existingItem = state!.items.firstWhere(
+      (cartItem) => cartItem.name == item.name
+    );
+    }catch (e){}
+     
+
+    if (existingItem != null) {
+      
+      increaseQuantity(existingItem.id);
+    } else {
+      
+      state!.items.add(item);
+      state = state!.copyWith(items: List.from(state!.items), total: _calculateTotal());
+      await updateCartPendienteInFirestore();
+    }
+  } else {
+    print("EL CART ES NULOOOOOOOOOO");
+  }
+}
+
+  Future<void> updateCartPendienteInFirestore() async { // retocar aca
     if (state != null) {
       try {
         final docRef = db.collection('cartPendientes').doc(state!.id);
