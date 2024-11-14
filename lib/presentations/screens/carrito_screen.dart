@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/core/router/items/model_cartPendiente.dart';
 import 'package:flutter_application_1/core/router/items/model_order.dart';
 import 'package:flutter_application_1/presentations/providers/cartItem_provider.dart';
 import 'package:flutter_application_1/presentations/providers/cartPendiente_provider.dart';
@@ -22,10 +23,9 @@ class CarritoScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     
     final cartPendiente = ref.watch(cartPendienteProvider);
-
+    final userData = ref.watch(userProvider);
     
     if (cartPendiente == null) {
-      
       return Scaffold(
         appBar: AppBar(
           leading: const BackButtonWidget(),
@@ -35,39 +35,38 @@ class CarritoScreen extends ConsumerWidget {
       );
     }
 
-
-if (cartPendiente.items.isEmpty) {
-  return Scaffold(
-    appBar: AppBar(
-      //leading: const BackButtonWidget(),
-      title: const Text('Carrito'),
-    ),
-    body: Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Icon(Icons.shopping_cart_outlined, size: 50, color: Colors.grey),
-          SizedBox(height: 20),
-          Text(
-            'No has comprado nada 😢', 
-            style: TextStyle(
-              fontSize: 16, 
-              fontWeight: FontWeight.bold, 
-              color: Colors.black, 
-            ),
+    if (cartPendiente.items.isEmpty) {
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text('Carrito'),
+        ),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Icon(Icons.shopping_cart_outlined, size: 50, color: Colors.grey),
+              SizedBox(height: 20),
+              Text(
+                'No has comprado nada 😢', 
+                style: TextStyle(
+                  fontSize: 16, 
+                  fontWeight: FontWeight.bold, 
+                  color: Colors.black, 
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
-    ),
-    bottomNavigationBar: const MainMenu(),
-  );
-}
-    
+        ),
+        bottomNavigationBar: const MainMenu(),
+      );
+    }
+
     double total = cartPendiente.items.fold(0, (sum, item) {
       return sum + (item.price * item.quantity);
     });
 
+    
     return Scaffold(
       appBar: AppBar(
         leading: const BackButtonWidget(),
@@ -88,11 +87,9 @@ if (cartPendiente.items.isEmpty) {
                   trailing: QuantityWidget(
                     cantidad: item.quantity,
                     aumentarCantidad: () {
-                      
                       ref.read(cartPendienteProvider.notifier).increaseQuantity(item.id);
                     },
                     disminuirCantidad: () {
-                      
                       ref.read(cartPendienteProvider.notifier).decreaseQuantity(item.id);
                     },
                   ),
@@ -108,78 +105,61 @@ if (cartPendiente.items.isEmpty) {
             ),
           ),
           ElevatedButton(
-            onPressed: () {
+            onPressed: () async {
               
-              if (cartPendiente.items.isEmpty) {
-                showDialog(
-                  context: context,
-                  builder: (context) {
-                    return AlertDialog(
-                      title: const Text('Carrito vacío'),
-                      content: const Text('No compraste nada aún.'),
-                      actions: [
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: const Text('OK'),
-                        ),
-                      ],
-                    );
-                  },
-                );
-              } else {
-                showDialog(
-                  context: context,
-                  builder: (context) {
-                    return AlertDialog(
-                      title: const Text('Confirmación de compra'),
-                      content: const Text('¿Estás seguro de que deseas realizar esta compra?'),
-                      actions: [
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop(); 
-                          },
-                          child: const Text('No'),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            
-                            final userData = ref.read(userProvider);
-                            final mail = userData.email;
-
-                            
-                            final newCart = Cart(
-                              email: mail,
-                              id: DateTime.now().millisecondsSinceEpoch.toString(),
-                              fechaCompra: DateTime.now(),
-                              items: List.from(cartPendiente.items),
-                              total: total,
+                
+                if (userData.addresses.isEmpty) {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: const Text('Sin direcciones'),
+                        content: const Text('No tienes direcciones guardadas. ¿Quieres agregar una?'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                              context.push('/perfil/direcciones');
+                              //bottomNavigationBar: const MainMenu();
+                            },
+                            child: const Text('Agregar dirección'),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                              
+                            },
+                            child: const Text('Cancelar'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                } else {
+                  
+                  showDialog<String>(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: const Text('Selecciona una dirección'),
+                        content: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: userData.addresses.map((address) {
+                            return ListTile(
+                              title: Text(address),
+                              onTap: () {
+                                
+                                Navigator.of(context).pop();
+                                _showConfirmationDialog(context, ref, cartPendiente, total, address);
+                              },
                             );
-
-                            
-                            var uuid = Uuid();
-                            String uniqueId = uuid.v4();
-                            final newOrder = UserOrder(cart: newCart, email: mail, id: uniqueId);
-
-                            
-                            ref.read(carritosProvider.notifier).addCart(newCart); 
-                            ref.read(orderProvider.notifier).addOrder(newOrder); 
-
-                            
-                            ref.read(cartPendienteProvider.notifier).clearCartPendiente(mail);
-
-                            
-                            Navigator.of(context).pop();
-                            context.go('/aprobada');
-                          },
-                          child: const Text('Sí'),
+                          }).toList(),
                         ),
-                      ],
-                    );
-                  },
-                );
-              }
+                      );
+                    },
+                  );
+                }
+              
             },
             child: const Text('Comprar'),
           ),
@@ -188,4 +168,53 @@ if (cartPendiente.items.isEmpty) {
       bottomNavigationBar: const MainMenu(),
     );
   }
+
+  
+  void _showConfirmationDialog(BuildContext context, WidgetRef ref, CartPendiente cartPendiente, double total, String address) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Confirmación de compra'),
+          content: const Text('¿Estás seguro de que deseas realizar esta compra?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); 
+              },
+              child: const Text('No'),
+            ),
+            TextButton(
+              onPressed: () {
+                final userData = ref.read(userProvider);
+                final mail = userData.email;
+
+                final newCart = Cart(
+                  email: mail,
+                  id: DateTime.now().millisecondsSinceEpoch.toString(),
+                  fechaCompra: DateTime.now(),
+                  items: List.from(cartPendiente.items),
+                  total: total,
+                  //direccion: address, // 
+                );
+
+                var uuid = Uuid();
+                String uniqueId = uuid.v4();
+                final newOrder = UserOrder(cart: newCart, email: mail, id: uniqueId);
+
+                ref.read(carritosProvider.notifier).addCart(newCart); 
+                ref.read(orderProvider.notifier).addOrder(newOrder); 
+
+                ref.read(cartPendienteProvider.notifier).clearCartPendiente(mail);
+
+                Navigator.of(context).pop();
+                context.go('/aprobada');
+              },
+              child: const Text('Sí'),
+            ),
+          ],
+        );
+     },
+);
+}
 }
