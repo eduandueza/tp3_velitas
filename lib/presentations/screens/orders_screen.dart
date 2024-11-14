@@ -46,7 +46,6 @@ class OrdersScreen extends ConsumerWidget {
             );
           }
 
-          // Si no hay datos (lista vacía)
           return const Center(child: Text("No hay órdenes disponibles"));
         },
       ),

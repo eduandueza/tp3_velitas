@@ -156,4 +156,45 @@ class CandleProvider extends StateNotifier<List<Candle>> {
       isLoading = false;
     }
   }
+
+Future<void> updateCandleStockAfterPurchase(String candleName, int quantity) async {
+  try {
+    
+      Candle? candle=null;
+
+    try{
+     candle = state.firstWhere((c) => c.name == candleName);
+    }catch(e){}
+    
+
+    if (candle != null) {
+      final newStock = candle.stock - quantity;
+
+      
+      if (newStock < 0) {
+        throw Exception('Stock insuficiente para ${candle.name}');
+      }
+
+      
+      final docRef = db.collection('products').doc(candle.id);
+      await docRef.update({'stock': newStock});
+
+      
+      state = state.map((c) {
+
+        if (c.id == candle?.id) {
+          return c.copyWith(stock: newStock);
+        }
+        return c;
+      }).toList();
+
+    } else {
+      throw Exception('Vela no encontrada: $candleName');
+    }
+  } catch (e) {
+    print("Error actualizando stock: $e");
+}
+}
+
+
 }

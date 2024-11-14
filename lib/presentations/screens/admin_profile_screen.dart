@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/presentations/providers/auth_provider.dart';
+import 'package:flutter_application_1/presentations/providers/user_provider.dart';
 import 'package:flutter_application_1/widgets/main_menu.dart';
 import 'package:flutter_application_1/widgets/profileOptions.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 
-class AdminProfileScreen extends StatelessWidget {
+class AdminProfileScreen extends ConsumerWidget {
   const AdminProfileScreen({Key? key}) : super(key: key);
+  
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+
+    final userData = ref.watch(userProvider);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Panel de Administrador"),
@@ -46,7 +52,15 @@ class AdminProfileScreen extends StatelessWidget {
               title: "Categorías",
               subtitle: "Gestionar las categorías",
               onTap: () => context.push('/admin/categories'),
-            ),
+            ),ProfileOption(
+                  icon: Icons.logout,
+                  title: "Cerrar sesión",
+                  subtitle: "",
+                  onTap: () async {
+                    await ref.read(authProvider.notifier).logout();
+                    context.push('/login');
+                  }
+                ),
           ],
         ),
       ),
