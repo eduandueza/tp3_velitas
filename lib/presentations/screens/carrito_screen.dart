@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/core/router/items/model_cartPendiente.dart';
 import 'package:flutter_application_1/core/router/items/model_order.dart';
+import 'package:flutter_application_1/domain/candle.dart';
+import 'package:flutter_application_1/presentations/providers/candle_provider.dart';
 import 'package:flutter_application_1/presentations/providers/cartItem_provider.dart';
 import 'package:flutter_application_1/presentations/providers/cartPendiente_provider.dart';
 import 'package:flutter_application_1/presentations/providers/user_provider.dart';
@@ -106,9 +108,50 @@ class CarritoScreen extends ConsumerWidget {
           ),
           ElevatedButton(
             onPressed: () async {
-              
+              bool stockSuficiente = true;
+              String mensajeError = '';
+
+              for (var item in cartPendiente.items) {
+
+               Candle ?candle=null;
+
+               try {
+               candle = ref.read(candleProvider).firstWhere(
+                  (candle) => candle.name == item.name
+                );
+               }catch (e){
                 
-                if (userData.addresses.isEmpty) {
+               }
+              
+                if (candle != null && item.quantity > candle.stock) {
+                  stockSuficiente = false;
+                  mensajeError = 'No hay suficiente stock para ${item.name}. Solo quedan ${candle.stock} unidades.';
+                  break;
+                }
+              }
+
+              if (!stockSuficiente) {
+                // Si el stock no es suficiente, mostrar un mensaje de error
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: const Text('Stock insuficiente'),
+                      content: Text(mensajeError),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text('OK'),
+                        ),
+                      ],
+                    );
+                  },
+                );
+                
+              } else {
+                  if (userData.addresses.isEmpty) {
                   showDialog(
                     context: context,
                     builder: (context) {
@@ -159,7 +202,7 @@ class CarritoScreen extends ConsumerWidget {
                     },
                   );
                 }
-              
+              }
             },
             child: const Text('Comprar'),
           ),
@@ -185,7 +228,7 @@ class CarritoScreen extends ConsumerWidget {
               child: const Text('No'),
             ),
             TextButton(
-              onPressed: () {
+              onPressed: () async {
                 final userData = ref.read(userProvider);
                 final mail = userData.email;
 
@@ -197,7 +240,10 @@ class CarritoScreen extends ConsumerWidget {
                   total: total,
                   //direccion: address, // 
                 );
-
+              for (var item in newCart.items) {
+                            
+                            await  ref.read(candleProvider.notifier).updateCandleStockAfterPurchase(item.name, item.quantity);
+               }
                 var uuid = Uuid();
                 String uniqueId = uuid.v4();
                 final newOrder = UserOrder(cart: newCart, email: mail, id: uniqueId);
