@@ -26,6 +26,7 @@ class CartItem {
    
   }
 
+
   Map<String, dynamic> toMap() {
     return {
       'name': name,
