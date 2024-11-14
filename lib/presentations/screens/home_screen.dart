@@ -79,12 +79,6 @@ class HomeScreen extends ConsumerWidget {
                       ),
               ),
             ),
-            ElevatedButton(
-              onPressed: () {
-                context.go('/login');
-              },
-              child: const Text('Ir a Login'),
-            ),
           ],
         ),
       ),
