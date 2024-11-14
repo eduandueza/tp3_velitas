@@ -35,6 +35,34 @@ class CarritoScreen extends ConsumerWidget {
       );
     }
 
+
+if (cartPendiente.items.isEmpty) {
+  return Scaffold(
+    appBar: AppBar(
+      //leading: const BackButtonWidget(),
+      title: const Text('Carrito'),
+    ),
+    body: Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Icon(Icons.shopping_cart_outlined, size: 50, color: Colors.grey),
+          SizedBox(height: 20),
+          Text(
+            'No has comprado nada 😢', 
+            style: TextStyle(
+              fontSize: 16, 
+              fontWeight: FontWeight.bold, 
+              color: Colors.black, 
+            ),
+          ),
+        ],
+      ),
+    ),
+    bottomNavigationBar: const MainMenu(),
+  );
+}
     
     double total = cartPendiente.items.fold(0, (sum, item) {
       return sum + (item.price * item.quantity);
