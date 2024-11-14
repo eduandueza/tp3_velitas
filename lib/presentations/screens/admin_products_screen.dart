@@ -200,7 +200,13 @@ class AdminProductsScreen extends ConsumerWidget {
                     decoration: const InputDecoration(labelText: 'Categoría'),
                     onChanged: (CandleType? newValue) {
                       // Aquí actualizas el estado con el tipo de vela seleccionado.
+                      print(selectedCandleTypeProvider.state);
+                      print(selectedCandleTypeProvider.state);
+                      print(selectedCandleTypeProvider.state);
                       ref.read(selectedCandleTypeProvider.state).state = newValue;
+                      print(selectedCandleTypeProvider.state);
+                      print(selectedCandleTypeProvider.state);
+                      print(selectedCandleTypeProvider.state);
                     },
                     items: candleTypes.map((CandleType type) {
                       return DropdownMenuItem<CandleType>(

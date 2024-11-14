@@ -64,7 +64,7 @@ class AdminCandleTypeScreen extends ConsumerWidget {
                 onPressed: () {
                   _showAddDialog(context, candleTypeProviderNotifier);
                 },
-                child: const Text('Agregar tipo de vela'),
+                child: const Text('Agregar categoría'),
               ),
             ),
           ],

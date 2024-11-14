@@ -10,7 +10,8 @@ final candleProvider = StateNotifierProvider<CandleProvider, List<Candle>>(
 
 class CandleProvider extends StateNotifier<List<Candle>> {
   final FirebaseFirestore db;
- // final FirebaseStorage storage; // Referencia a Firebase Storage
+  bool isLoading = false;
+  bool noResults = false;
 
   CandleProvider(this.db) : super([]) {
     getAllCandles();
@@ -20,7 +21,7 @@ class CandleProvider extends StateNotifier<List<Candle>> {
   Future<void> addCandleWithImage(Candle candle, String imagePath) async {
     final docRef = db.collection('products').doc();
     try {
-      final imageUrl = 'dummy_image_url'; 
+      final imageUrl = 'dummy_image_url';  // Simula la URL de la imagen
 
       // Crear un nuevo Candle con la URL de la imagen
       final newCandle = candle.copyWith(id: docRef.id, imageUrl: imageUrl);
@@ -33,7 +34,7 @@ class CandleProvider extends StateNotifier<List<Candle>> {
     }
   }
 
- // Modificación: Método para actualizar el stock
+  // Método para actualizar el stock de una vela
   Future<void> updateCandleStock(String id, int newStock) async {
     try {
       final docRef = db.collection('products').doc(id);
@@ -51,35 +52,16 @@ class CandleProvider extends StateNotifier<List<Candle>> {
     }
   }
 
-
-
- // Método para obtener una vela específica por su ID
-  /*Future<Candle?> getCandleById(String id) async {
-    try {
-      final docSnapshot = await db.collection('products').doc(id).get();
-      if (docSnapshot.exists) {
-        return Candle.fromFirestore(docSnapshot.data() as Map<String, dynamic>, docSnapshot.id);
-      }
-      return null; // Si no existe la vela
-    } catch (e) {
-      print("Error obteniendo vela por ID: $e");
-      return null;
-    }
-  }*/
-
+  // Método para obtener una vela específica por su ID
   Candle? getCandleById(String id) {
-  // Devuelve el Candle si existe en el state, o null si no se encuentra
     try {
-    // Intenta encontrar el Candle con el ID proporcionado
-    return state.firstWhere((candle) => candle.id == id);
-  } catch (e) {
-    // Si no se encuentra, devuelve null
-    return null;
+      return state.firstWhere((candle) => candle.id == id);
+    } catch (e) {
+      return null; // Si no se encuentra, devuelve null
+    }
   }
-}
 
-
- // Método para actualizar un producto
+  // Método para actualizar un producto
   Future<void> updateCandle(Candle updatedCandle) async {
     try {
       final docRef = db.collection('products').doc(updatedCandle.id);
@@ -99,63 +81,79 @@ class CandleProvider extends StateNotifier<List<Candle>> {
     }
   }
 
-
-
-
-/*
- // Método para marcar una vela como inactiva (borrado lógico)
+  // Método para desactivar una vela (borrado lógico)
   Future<void> deactivateCandle(String id) async {
     try {
       final docRef = db.collection('products').doc(id);
+      await docRef.update({'active': false});  // Desactiva la vela
 
-      // Actualiza el campo 'active' a false para hacer el borrado lógico
-      await docRef.update({'active': false});
-
-      // Actualiza el estado local de la vela
-      state = state.map((candle) {
-        if (candle.id == id) {
-          return candle.copyWith(active: false); // Marca la vela como inactiva
-        }
-        return candle;
-      }).toList();
+      // Recargar todas las velas activas después de la desactivación
+      await getAllCandles();  // Llamada a getAllCandles para recargar la lista
     } catch (e) {
       print('Error desactivando la vela: $e');
     }
   }
-  */
-  Future<void> deactivateCandle(String id) async {
-    try {
-      final docRef = db.collection('products').doc(id);
 
-    // Actualiza el campo 'active' a false para hacer el borrado lógico
-      await docRef.update({'active': false});
-
-    // Recargar todas las velas activas después de la desactivación
-      await getAllCandles(); // Llamada a getAllCandles para recargar la lista
-
-    } catch (e) {
-     print('Error desactivando la vela: $e');
-   }
-  }
-
-
-   // Método para obtener todas las velas de Firestore que estén activas
+  // Método para obtener todas las velas activas de Firestore
   Future<void> getAllCandles() async {
     try {
+      isLoading = true;
+      noResults = false;
+      state = [];  // Limpiar el estado antes de la consulta
+
       final querySnapshot = await db.collection('products')
-          .where('active', isEqualTo: true)  // Filtrar solo las velas activas
+          .where('active', isEqualTo: true)  // Filtra solo las velas activas
           .get();
 
+      if (querySnapshot.docs.isEmpty) {
+        noResults = true;  // Si no hay resultados, establecer noResults como true
+      }
+
+      // Actualiza el estado con las velas activas
       state = querySnapshot.docs.map((doc) {
         return Candle.fromFirestore(doc.data() as Map<String, dynamic>, doc.id);
       }).toList();
     } catch (e) {
       print('Error obteniendo velas activas: $e');
+      noResults = true;
+      state = [];
+    } finally {
+      isLoading = false;
     }
   }
 
+  // Método para obtener velas filtradas por categoría (typeRef)
+  Future<void> getCandlesByCategory(DocumentReference? categoryRef) async {
+    if (categoryRef == null) {
+      // Si categoryRef es null, simplemente no hacemos nada o podemos mostrar todas las velas
+      await getAllCandles();
+      return;
+    }
 
+    try {
+      isLoading = true;
+      noResults = false;
+      state = [];  // Limpiar el estado antes de la consulta
 
+      final querySnapshot = await db.collection('products')
+          .where('active', isEqualTo: true)
+          .where('type_ref', isEqualTo: categoryRef)  // Filtra por categoría
+          .get();
 
-  
+      if (querySnapshot.docs.isEmpty) {
+        noResults = true;  // Si no hay resultados, establecer noResults como true
+      }
+
+      // Actualiza el estado con las velas filtradas por categoría
+      state = querySnapshot.docs.map((doc) {
+        return Candle.fromFirestore(doc.data() as Map<String, dynamic>, doc.id);
+      }).toList();
+    } catch (e) {
+      print('Error obteniendo velas por categoría: $e');
+      noResults = true;
+      state = [];
+    } finally {
+      isLoading = false;
+    }
+  }
 }
