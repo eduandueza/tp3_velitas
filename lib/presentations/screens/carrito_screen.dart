@@ -92,7 +92,13 @@ class CarritoScreen extends ConsumerWidget {
                       ref.read(cartPendienteProvider.notifier).increaseQuantity(item.id);
                     },
                     disminuirCantidad: () {
-                      ref.read(cartPendienteProvider.notifier).decreaseQuantity(item.id);
+                       
+                       if (item.quantity == 1) {
+                        _showRemoveItemDialog(context, ref, item.id);
+                      } else {
+                        
+                          ref.read(cartPendienteProvider.notifier).decreaseQuantity(item.id);
+                      }
                     },
                   ),
                 );
@@ -263,4 +269,33 @@ class CarritoScreen extends ConsumerWidget {
      },
 );
 }
+}
+
+
+
+void _showRemoveItemDialog(BuildContext context, WidgetRef ref, String itemId) {
+  showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        title: const Text('Eliminar artículo'),
+        content: const Text('¿Estás seguro de que quieres eliminar este artículo del carrito?'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();  
+            },
+            child: const Text('No'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();  
+              ref.read(cartPendienteProvider.notifier).decreaseQuantity(itemId);  
+            },
+            child: const Text('Sí'),
+          ),
+        ],
+      );
+    },
+  );
 }

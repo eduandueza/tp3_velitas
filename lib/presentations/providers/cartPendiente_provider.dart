@@ -122,8 +122,7 @@ void decreaseQuantity(String itemId) {
     final itemIndex = state!.items.indexWhere((item) => item.id == itemId);
 
     if (itemIndex != -1) {
-      final currentItem = state!.items[itemIndex];
-      
+    final currentItem = state!.items[itemIndex];
       
       if (currentItem.quantity > 1) {
         
@@ -131,18 +130,19 @@ void decreaseQuantity(String itemId) {
           quantity: currentItem.quantity - 1,
         );
 
-        
         state!.items[itemIndex] = updatedItem;
 
-        
-        state = state!.copyWith(
+      }else if (currentItem.quantity == 1){
+          state!.items.removeAt(itemIndex);
+      }
+
+      state = state!.copyWith(
           items: List.from(state!.items),
           total: _calculateTotal(),
         );
 
         
         updateCartPendienteInFirestore();
-      }
     }
   }
 }
@@ -223,5 +223,5 @@ void decreaseQuantity(String itemId) {
 
 // Define el CartPendienteProvider, que es un provider de tipo StateNotifierProvider
 final cartPendienteProvider = StateNotifierProvider<CartPendienteNotifier, CartPendiente?>(
-  (ref) => CartPendienteNotifier(FirebaseFirestore.instance, ref),
+  (ref) => CartPendienteNotifier(FirebaseFirestore.instance,ref),
 );
