@@ -20,15 +20,7 @@ class CandleProvider extends StateNotifier<List<Candle>> {
   Future<void> addCandleWithImage(Candle candle, String imagePath) async {
     final docRef = db.collection('products').doc();
     try {
-      // Subir imagen a Firebase Storage
-      // Comentado para evitar errores hasta que configures Storage correctamente
-      /*
-      final imageRef = storage.ref().child('images/${docRef.id}');
-      final uploadTask = imageRef.putFile(File(imagePath));
-      final imageUrl = await (await uploadTask).ref.getDownloadURL();
-      */
-
-      final imageUrl = 'dummy_image_url'; // URL de imagen temporal para la demo
+      final imageUrl = 'dummy_image_url'; 
 
       // Crear un nuevo Candle con la URL de la imagen
       final newCandle = candle.copyWith(id: docRef.id, imageUrl: imageUrl);
@@ -86,15 +78,84 @@ class CandleProvider extends StateNotifier<List<Candle>> {
   }
 }
 
-  // Método para obtener todas las velas de Firestore
+
+ // Método para actualizar un producto
+  Future<void> updateCandle(Candle updatedCandle) async {
+    try {
+      final docRef = db.collection('products').doc(updatedCandle.id);
+      
+      // Actualiza el documento en Firebase
+      await docRef.update(updatedCandle.toFirestore());
+
+      // Actualiza el estado local de la lista de productos
+      state = state.map((candle) {
+        if (candle.id == updatedCandle.id) {
+          return updatedCandle; // Reemplaza el producto con los nuevos datos
+        }
+        return candle;
+      }).toList();
+    } catch (e) {
+      print('Error actualizando el producto: $e');
+    }
+  }
+
+
+
+
+/*
+ // Método para marcar una vela como inactiva (borrado lógico)
+  Future<void> deactivateCandle(String id) async {
+    try {
+      final docRef = db.collection('products').doc(id);
+
+      // Actualiza el campo 'active' a false para hacer el borrado lógico
+      await docRef.update({'active': false});
+
+      // Actualiza el estado local de la vela
+      state = state.map((candle) {
+        if (candle.id == id) {
+          return candle.copyWith(active: false); // Marca la vela como inactiva
+        }
+        return candle;
+      }).toList();
+    } catch (e) {
+      print('Error desactivando la vela: $e');
+    }
+  }
+  */
+  Future<void> deactivateCandle(String id) async {
+    try {
+      final docRef = db.collection('products').doc(id);
+
+    // Actualiza el campo 'active' a false para hacer el borrado lógico
+      await docRef.update({'active': false});
+
+    // Recargar todas las velas activas después de la desactivación
+      await getAllCandles(); // Llamada a getAllCandles para recargar la lista
+
+    } catch (e) {
+     print('Error desactivando la vela: $e');
+   }
+  }
+
+
+   // Método para obtener todas las velas de Firestore que estén activas
   Future<void> getAllCandles() async {
     try {
-      final querySnapshot = await db.collection('products').get();
+      final querySnapshot = await db.collection('products')
+          .where('active', isEqualTo: true)  // Filtrar solo las velas activas
+          .get();
+
       state = querySnapshot.docs.map((doc) {
         return Candle.fromFirestore(doc.data() as Map<String, dynamic>, doc.id);
       }).toList();
     } catch (e) {
-      print(e);
+      print('Error obteniendo velas activas: $e');
     }
   }
+
+
+
+
+  
 }

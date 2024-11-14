@@ -1,3 +1,4 @@
+import 'package:flutter_application_1/presentations/screens/admin_candleType_screen.dart';
 import 'package:flutter_application_1/presentations/screens/admin_orders_screen.dart';
 import 'package:flutter_application_1/presentations/screens/admin_products_screen.dart';
 import 'package:flutter_application_1/presentations/screens/admin_users_screen.dart';
@@ -56,6 +57,10 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/admin/products',
       builder: (context, state) => const AdminProductsScreen(),
+      ),
+       GoRoute(
+      path: '/admin/categories',
+      builder: (context, state) => const AdminCandleTypeScreen(),
       ),
     GoRoute(
       path: '/admin/users',
