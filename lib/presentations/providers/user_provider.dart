@@ -51,7 +51,11 @@ class UserNotifier extends StateNotifier<UserData> {
   }
 }
 
-  
+  bool logueado(String mail) {
+    return mail==state.email;
+  }
+
+
   void logout() {
     state = UserData.anonymous;
   }

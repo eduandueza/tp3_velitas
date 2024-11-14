@@ -9,16 +9,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 
-  class CreateAccountScreen extends ConsumerWidget {
+class CreateAccountScreen extends ConsumerWidget {
   const CreateAccountScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    
     final authNotifier = ref.watch(authProvider.notifier);
     final userNotifier = ref.watch(userProvider.notifier);
 
-    // variables para los datos del formulario
+    // Controladores para los campos de texto
     final TextEditingController nameController = TextEditingController();
     final TextEditingController lastNameController = TextEditingController();
     final TextEditingController emailController = TextEditingController();
@@ -56,30 +55,22 @@ import 'package:go_router/go_router.dart';
             CustomButton(
               text: "Crear cuenta",
               onPressed: () async {
-                
                 FocusScope.of(context).unfocus();
 
-                
                 final email = emailController.text;
                 final password = passwordController.text;
                 final name = nameController.text;
                 final lastName = lastNameController.text;
 
-                // COMO TE ODIO FLUTTER
-
-                try {
-                  
-                  await authNotifier.register(email, password);
-
-                }catch (s){
-                   print ("error a crear el registro en la bd perooo: $s");
-                }  
- 
                 try{
-                  // Una vez que el registro es exitoso se guarda una instancia en el state de userProvider
+                  await authNotifier.register(email, password);
+                }catch (e){
+                  print(e);
+                }
+
+                try {              
                   final userId = authNotifier.getUid();
                   if (userId != null) {
-                    
                     await userNotifier.createUserInFirestore(
                       userId: userId,
                       name: name,
@@ -87,20 +78,13 @@ import 'package:go_router/go_router.dart';
                       photoUrl: '', 
                     );
 
-                    print ("SE CREO EL USUARIO Y SE GUARDO EN LA BD");
-                    print ("SE CREO EL USUARIO Y SE GUARDO EN LA BD");
-                    print ("SE CREO EL USUARIO Y SE GUARDO EN LA BD");
-                    print ("SE CREO EL USUARIO Y SE GUARDO EN LA BD");
-                    print ("SE CREO EL USUARIO Y SE GUARDO EN LA BD");
-                    print ("SE CREO EL USUARIO Y SE GUARDO EN LA BD");
-                    print ("SE CREO EL USUARIO Y SE GUARDO EN LA BD");
+                    print("SE CREO EL USUARIO Y SE GUARDO EN LA BD");
 
-                    
-                    context.push('/login');
+                    context.pop();  
                   }
-                } catch (e) {
-                  
+                } catch (e,stackTrace) {
                   print("Error al crear la cuenta: $e");
+                  print("Stack trace: $stackTrace");
                 }
               },
             ),
@@ -110,5 +94,4 @@ import 'package:go_router/go_router.dart';
     );
   }
 }
-
 
