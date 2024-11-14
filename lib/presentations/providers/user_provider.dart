@@ -1,11 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_application_1/core/router/items/model_userData.dart';
 import 'package:flutter_application_1/presentations/providers/auth_provider.dart';
+import 'package:flutter_application_1/presentations/providers/cartPendiente_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class UserNotifier extends StateNotifier<UserData> {
-  UserNotifier() : super(UserData.anonymous);
+  UserNotifier(this.ref) : super(UserData.anonymous);
+
   final FirebaseFirestore _db = FirebaseFirestore.instance;
+  final Ref ref;
 
   // Método para obtener todos los usuarios desde Firestore
   Future<List<UserData>> getAllUsers() async {
@@ -22,6 +25,8 @@ class UserNotifier extends StateNotifier<UserData> {
     }
     }
   
+  
+
   void setUserData(UserData userData) {
     state = userData;
   }
@@ -102,11 +107,18 @@ class UserNotifier extends StateNotifier<UserData> {
       if (data != null) {
         
         setUserData(UserData.fromFirebaseToCode(data, userId));
+
+        final userEmail = state.email;  // Obtenemos el email del usuario cargado
+        if (userEmail != null) {
+          // Accedemos al CartPendienteNotifier y cargamos el carrito
+          ref.read(cartPendienteProvider.notifier).loadCartPendiente(userEmail);
+        }
+
       }
     }
   }
 
-  //Future<void> register()
+  
 
  
   Future<void> createUserInFirestore({required String userId,required String name,required String email,String? photoUrl,}) async {
@@ -132,14 +144,11 @@ class UserNotifier extends StateNotifier<UserData> {
     }
   }
 
-
-
 }
-
 
 final userProvider = StateNotifierProvider<UserNotifier, UserData>((ref) {
   final authUser = ref.watch(authProvider);
-  final userNotifier = UserNotifier();
+  final userNotifier = UserNotifier(ref);
 
   if (authUser != null) {
     

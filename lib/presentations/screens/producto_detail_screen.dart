@@ -114,9 +114,9 @@ class ProductoDetailScreen extends ConsumerWidget {
     return Center(
       child: ElevatedButton.icon(
         onPressed: () async {
-          final cartItemProvider = ref.read(carritoProvider.notifier);
+          final cartItemProvider = ref.read(cartPendienteProvider.notifier);
           
-           cartItemProvider.addItem(
+           cartItemProvider.addItemToCartPendiente(
             CartItem(
               id: DateTime.now().toString(), // id temporal, puede ser cambiado si necesitas otra lógica
               name: product.name,

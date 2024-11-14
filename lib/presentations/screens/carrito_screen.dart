@@ -20,9 +20,23 @@ class CarritoScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final carritosProv = ref.watch(carritoProvider);
-    final cartItems = carritosProv; // Obtén los items del carrito del nuevo provider
-    double total = cartItems.fold(0, (sum, item) {
+    
+    final cartPendiente = ref.watch(cartPendienteProvider);
+
+    
+    if (cartPendiente == null) {
+      
+      return Scaffold(
+        appBar: AppBar(
+          leading: const BackButtonWidget(),
+          title: const Text('Carrito'),
+        ),
+        body: const Center(child: CircularProgressIndicator()), 
+      );
+    }
+
+    
+    double total = cartPendiente.items.fold(0, (sum, item) {
       return sum + (item.price * item.quantity);
     });
 
@@ -37,19 +51,21 @@ class CarritoScreen extends ConsumerWidget {
           const SizedBox(height: 20),
           Expanded(
             child: ListView.builder(
-              itemCount: cartItems.length,
+              itemCount: cartPendiente.items.length,
               itemBuilder: (context, index) {
-                final item = cartItems[index];
+                final item = cartPendiente.items[index];
                 return ListTile(
                   title: Text(item.name),
                   subtitle: Text('Precio: \$${item.price.toStringAsFixed(2)}'),
                   trailing: QuantityWidget(
                     cantidad: item.quantity,
                     aumentarCantidad: () {
-                      ref.read(carritoProvider.notifier).increaseQuantity(item.id);
+                      
+                      ref.read(cartPendienteProvider.notifier).increaseQuantity(item.id);
                     },
                     disminuirCantidad: () {
-                      ref.read(carritoProvider.notifier).decreaseQuantity(item.id);
+                      
+                      ref.read(cartPendienteProvider.notifier).decreaseQuantity(item.id);
                     },
                   ),
                 );
@@ -65,14 +81,14 @@ class CarritoScreen extends ConsumerWidget {
           ),
           ElevatedButton(
             onPressed: () {
-              // Verifica si el carrito está vacío
-              if (cartItems.isEmpty) {
+              
+              if (cartPendiente.items.isEmpty) {
                 showDialog(
                   context: context,
                   builder: (context) {
                     return AlertDialog(
                       title: const Text('Carrito vacío'),
-                      content: const Text('No compraste nada che.'),
+                      content: const Text('No compraste nada aún.'),
                       actions: [
                         TextButton(
                           onPressed: () {
@@ -100,37 +116,32 @@ class CarritoScreen extends ConsumerWidget {
                         ),
                         TextButton(
                           onPressed: () {
-
+                            
                             final userData = ref.read(userProvider);
                             final mail = userData.email;
-                            // Agregando carrito a los pedidos pendientes
-                            final newCart = Cart(
-                              email:mail,
-                              id: DateTime.now().millisecondsSinceEpoch.toString(),
-                              fechaCompra: DateTime.now(),
-                              items: List.from(cartItems),
-                              total: total,
-                            );
-                            var uuid = Uuid();
-                            String uniqueId = uuid.v4();
 
                             
+                            final newCart = Cart(
+                              email: mail,
+                              id: DateTime.now().millisecondsSinceEpoch.toString(),
+                              fechaCompra: DateTime.now(),
+                              items: List.from(cartPendiente.items),
+                              total: total,
+                            );
 
-                           final newOrder = UserOrder(cart:newCart,email: mail,id:uniqueId);
-                           
-                           
-                          //AQUI SE DEBERIA GUARDAR "newCart" en la base de datos
-                           ref.read(carritosProvider.notifier).addCart(newCart);
-                           // INSERTAR AQUI ADDORDER DE ORDERPROVIDER
-                           ref.read(orderProvider.notifier).addOrder(newOrder);
+                            
+                            var uuid = Uuid();
+                            String uniqueId = uuid.v4();
+                            final newOrder = UserOrder(cart: newCart, email: mail, id: uniqueId);
 
-                            // Aquí se agregaría el carrito a los pedidos pendientes
-                            // ref.read(cartPendienteProvider.notifier).addCart(newCart);
+                            
+                            ref.read(carritosProvider.notifier).addCart(newCart); 
+                            ref.read(orderProvider.notifier).addOrder(newOrder); 
 
-                            // Vaciar carrito actual
-                            ref.read(carritoProvider.notifier).clearCart();
+                            
+                            ref.read(cartPendienteProvider.notifier).clearCartPendiente(mail);
 
-                            // Redirigir a pantalla de compra aprobada
+                            
                             Navigator.of(context).pop();
                             context.go('/aprobada');
                           },

@@ -11,33 +11,30 @@ class CartPendienteNotifier extends StateNotifier<CartPendiente?> {
   final FirebaseFirestore db;
   final Ref ref;
 
-  CartPendienteNotifier(this.db, this.ref) : super(null) {
-    // Escucha los cambios en authProvider
-    ref.listen<User?>(
-      authProvider,
-      (previous, next) {
-        if (next != null) {
-          // Si el usuario está autenticado, cargar el carrito pendiente
-          _loadCartPendiente(next.email!);
-        } else {
-          // Si no hay usuario autenticado, limpia el carrito pendiente
-          state = null;
-        }
-      },
-    );
-  }
+  CartPendienteNotifier(this.db, this.ref) : super(null);
 
-  Future<void> _loadCartPendiente(String userEmail) async {
+  Future<void> loadCartPendiente(String userEmail) async {
     
-    final querySnapshot = await db.collection('cartPendientes')
+    print ("el email recibido por loadCartPendiente , es : "+userEmail);
+    
+    try {
+
+      final querySnapshot = await db.collection('cartPendientes')
           .where('mail_propietario', isEqualTo: userEmail)
           .get();
-
-    try {
           
         if (querySnapshot.docs.isNotEmpty) {
+
+       print(" el querySnapshot TIENE ALGO ");
+       print(" el querySnapshot TIENE ALGO ");
+
         final doc = querySnapshot.docs.first;
-        state = CartPendiente.fromFirestore(doc.data() as Map<String, dynamic>, doc.id);
+        state = CartPendiente.fromFirestore2(doc.data() as Map<String, dynamic>);
+
+      print ("SE CARGO CON EXITO EL CARRITO PENDIENTE DE LA BD");
+      print ("SE CARGO CON EXITO EL CARRITO PENDIENTE DE LA BD");
+      print ("SE CARGO CON EXITO EL CARRITO PENDIENTE DE LA BD");
+      print ("SE CARGO CON EXITO EL CARRITO PENDIENTE DE LA BD");
       } else {
         // Si no existe, crea un carrito pendiente vacío
         final nuevoCarrito = CartPendiente(
@@ -51,7 +48,15 @@ class CartPendienteNotifier extends StateNotifier<CartPendiente?> {
       await db.collection('cartPendientes').doc(nuevoCarrito.id).set(nuevoCarrito.toFirestore());
 
        state = nuevoCarrito;
+
+       print ("SE CARGO CON EXITO EL CARRITO PENDIENTE NUEVO");
+      print ("SE CARGO CON EXITO EL CARRITO PENDIENTE NUEVO");
+      print ("SE CARGO CON EXITO EL CARRITO PENDIENTE NUEVO");
+      print ("SE CARGO CON EXITO EL CARRITO PENDIENTE NUEVO");
+
       }
+     
+
 
     }catch (e){
       print('Error al cargar carrito pendiente: $e');
@@ -59,40 +64,29 @@ class CartPendienteNotifier extends StateNotifier<CartPendiente?> {
          
   }
 
-  Future<void> clearCartPendiente() async {
-  final userEmail = ref.read(authProvider)?.email;
-  
-  if (userEmail != null) {
-    try {
-      // Eliminamos el carrito actual de la base de datos
-      final querySnapshot = await db.collection('cartPendientes')
-          .where('mail_propietario', isEqualTo: userEmail)
-          .get();
+   Future<void> clearCartPendiente(String userEmail) async {
+  try {
+    // Obtener el carrito pendiente actual desde Firestore
+    final querySnapshot = await db.collection('cartPendientes')
+        .where('mail_propietario', isEqualTo: userEmail)
+        .get();
 
-      for (final doc in querySnapshot.docs) {
-        await doc.reference.delete();
-      }
+    if (querySnapshot.docs.isNotEmpty) {
+      final doc = querySnapshot.docs.first;
 
-      // Creamos un nuevo carrito vacío
-      final nuevoCarrito = CartPendiente(
-        id: DateTime.now().millisecondsSinceEpoch.toString(),
-        fechaCompra: DateTime.now(),
-        items: [],
-        total: 0.0,
-        mailPropietario: userEmail,
-      );
+      // Actualizar el estado del carrito vacío
+      final updatedCart = state?.copyWith(items: [], total: 0.0); // Vaciar los items y resetear el total
+      state = updatedCart; // Actualizar el estado del carrito
 
-      // Actualizamos el estado con el nuevo carrito vacío
-      state = nuevoCarrito;
+      // Subir el carrito vacío a Firestore
+      await db.collection('cartPendientes').doc(doc.id).set(updatedCart!.toFirestore());
 
-      // Guardamos el nuevo carrito en Firestore
-      await db.collection('cartPendientes').doc(nuevoCarrito.id).set(nuevoCarrito.toFirestore());
-
-    } catch (e) {
-      print('Error al limpiar y crear nuevo carrito pendiente: $e');
+      print('Carrito vacío actualizado en Firestore.');
+    } else {
+      print('No se encontró un carrito pendiente para el usuario con el email $userEmail.');
     }
-  } else {
-    print('No se pudo limpiar el carrito: no hay un usuario autenticado.');
+  } catch (e) {
+    print('Error al limpiar el carrito pendiente: $e');
   }
 }
 
@@ -123,11 +117,6 @@ class CartPendienteNotifier extends StateNotifier<CartPendiente?> {
       state = state!.copyWith(items: List.from(state!.items), total: _calculateTotal());
       await updateCartPendienteInFirestore();
     }else{
-      print("EL CART ES NULOOOOOOOOOO");
-      print("EL CART ES NULOOOOOOOOOO");
-      
-      print("EL CART ES NULOOOOOOOOOO");
-      print("EL CART ES NULOOOOOOOOOO");
       print("EL CART ES NULOOOOOOOOOO");
       print("EL CART ES NULOOOOOOOOOO");
     }
